@@ -3,6 +3,8 @@ package mirrg.bullet.nickel.entities;
 import java.awt.Color;
 
 import mirrg.bullet.nickel.Game;
+import mirrg.bullet.nickel.item.Item;
+import mirrg.bullet.nickel.item.Stack;
 
 public class EnemyFairy extends EnemyAbstract
 {
@@ -32,6 +34,22 @@ public class EnemyFairy extends EnemyAbstract
 		}
 
 		return super.move(game);
+	}
+
+	@Override
+	public void onDie(Game game)
+	{
+		for (int i = 0; i < 3; i++) {
+			double theta = 2 * Math.random() * Math.PI;
+			double length = 0.05;
+
+			if (0.2 > Math.random()) {
+				game.addEntityItem(new EntityItemStack(x, y, length * Math.cos(theta), length * Math.sin(theta),
+					new Stack(Item.EnumItem.values()[(int) (Item.EnumItem.values().length * Math.random())].item, 1)));
+			} else {
+				game.addEntityItem(new EntityItemScore(x, y, length * Math.cos(theta), length * Math.sin(theta), 10));
+			}
+		}
 	}
 
 }

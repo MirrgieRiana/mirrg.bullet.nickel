@@ -95,9 +95,9 @@ public abstract class EnemyAbstract implements ILiving
 
 	public void renderMarker(Game game, Graphics2D graphics)
 	{
-		double x2 = x * game.panel.getWidth();
-		double w2 = r * game.panel.getWidth();
-		double y2 = game.panel.getHeight() - 10;
+		double x2 = x * game.sizeGame.width;
+		double w2 = r * game.sizeGame.width;
+		double y2 = game.sizeGame.height - 10;
 		double h2 = r * 100;
 
 		graphics.setColor(new Color(255, 0, 0, 128));

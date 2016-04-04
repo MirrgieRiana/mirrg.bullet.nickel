@@ -4,6 +4,7 @@ import mirrg.applet.nitrogen.AppletNitrogen;
 import mirrg.applet.nitrogen.HAppletNitrogen;
 import mirrg.applet.nitrogen.HAppletNitrogen.ResponceApplyStandard;
 import mirrg.applet.nitrogen.NitrogenEventApplet;
+import mirrg.applet.nitrogen.NitrogenEventComponent;
 import mirrg.applet.nitrogen.modules.threading.NitrogenEventGameThread;
 
 public class PanelNickel extends AppletNitrogen
@@ -25,7 +26,10 @@ public class PanelNickel extends AppletNitrogen
 			game = new Game(this);
 		});
 		getEventManager().register(NitrogenEventGameThread.Init.class, event -> {
-			game.init();
+			game.init(getWidth(), getHeight());
+		});
+		getEventManager().register(NitrogenEventComponent.Resized.class, event -> {
+			game.resized(getWidth(), getHeight());
 		});
 		getEventManager().register(NitrogenEventGameThread.Tick.class, event -> {
 			synchronized (game) {

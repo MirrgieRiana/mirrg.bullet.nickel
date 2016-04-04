@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import mirrg.bullet.nickel.Game;
+import mirrg.bullet.nickel.item.Item;
+import mirrg.bullet.nickel.item.Stack;
 
 public class EnemyBoss1 extends EnemyAbstract
 {
@@ -116,9 +118,20 @@ public class EnemyBoss1 extends EnemyAbstract
 	public void onDie(Game game)
 	{
 		game.addBulletPlayer(new BulletBomb(x, y, 1));
+
+		for (int i = 0; i < 30; i++) {
+			double theta = 2 * Math.random() * Math.PI;
+			double length = 0.03 + 0.07 * Math.random();
+
+			if (0.2 > Math.random()) {
+				game.addEntityItem(new EntityItemStack(x, y, length * Math.cos(theta), length * Math.sin(theta),
+					new Stack(Item.EnumItem.values()[(int) (Item.EnumItem.values().length * Math.random())].item, 1)));
+			} else {
+				game.addEntityItem(new EntityItemScore(x, y, length * Math.cos(theta), length * Math.sin(theta), 10));
+			}
+		}
 	}
 
-	// TODO
 	private double pow2(double value)
 	{
 		return value * value;

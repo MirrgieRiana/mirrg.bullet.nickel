@@ -19,7 +19,7 @@ public class Main
 		jFrame.setLocationByPlatform(true);
 		jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		jFrame.setLayout(new CardLayout());
-		jFrame.setSize(1000, 1000);
+		jFrame.setSize(1300, 1000);
 
 		panel.init();
 
