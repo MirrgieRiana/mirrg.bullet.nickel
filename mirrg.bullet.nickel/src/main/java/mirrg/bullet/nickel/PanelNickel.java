@@ -12,7 +12,7 @@ public class PanelNickel extends AppletNitrogen
 
 	private static final long serialVersionUID = 6370904732290917883L;
 
-	public Game game;
+	public IGame game;
 	public ResponceApplyStandard responceApplyStandard;
 
 	public PanelNickel()
@@ -23,7 +23,7 @@ public class PanelNickel extends AppletNitrogen
 		//
 
 		getEventManager().register(NitrogenEventApplet.Init.class, event -> {
-			game = new Game(this);
+
 		});
 		getEventManager().register(NitrogenEventGameThread.Init.class, event -> {
 			game.init(getWidth(), getHeight());
@@ -53,6 +53,11 @@ public class PanelNickel extends AppletNitrogen
 			event.graphics.drawImage(responceApplyStandard.moduleTripleBuffer.getBufferSafety().getBuffer(), 0, 0, this);
 		});
 
+	}
+
+	public void setGame(IGame game)
+	{
+		this.game = game;
 	}
 
 }

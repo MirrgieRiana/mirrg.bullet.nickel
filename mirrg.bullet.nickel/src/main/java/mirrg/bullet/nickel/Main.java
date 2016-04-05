@@ -1,6 +1,5 @@
 package mirrg.bullet.nickel;
 
-import java.applet.Applet;
 import java.awt.CardLayout;
 
 import javax.swing.JFrame;
@@ -13,7 +12,8 @@ public class Main
 	{
 		JFrame jFrame = new JFrame();
 
-		Applet panel = new PanelNickel();
+		PanelNickel panel = new PanelNickel();
+		panel.setGame(new GameNickel(panel));
 		jFrame.add(panel);
 
 		jFrame.setLocationByPlatform(true);

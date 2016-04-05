@@ -9,4 +9,6 @@ public interface ILiving extends IEntity
 
 	public double getRadius();
 
+	public int getToughness();
+
 }

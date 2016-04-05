@@ -2,7 +2,7 @@ package mirrg.bullet.nickel.entities;
 
 import java.awt.Color;
 
-import mirrg.bullet.nickel.Game;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public class EntityItemScore extends EntityItemAbstract
 {
@@ -16,10 +16,10 @@ public class EntityItemScore extends EntityItemAbstract
 	}
 
 	@Override
-	public void onCought(Game game)
+	public void onCought(PhaseBattle phase)
 	{
-		game.score += score;
-		game.addParticle(new ParticleText(x, y, "+" + score, 20, new Color(255, 255, 0, 64)));
+		phase.addScore(score);
+		phase.addParticle(new ParticleText(x, y, "+" + score, 20, new Color(255, 255, 0, 64)));
 	}
 
 	@Override

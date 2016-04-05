@@ -1,4 +1,4 @@
-package mirrg.bullet.nickel.entities;
+package mirrg.bullet.nickel.entities.bullets;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -7,9 +7,9 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 
-import mirrg.bullet.nickel.Game;
 import mirrg.bullet.nickel.entity.IBullet;
 import mirrg.bullet.nickel.entity.ILiving;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public class BulletBomb implements IBullet, ILiving
 {
@@ -18,23 +18,25 @@ public class BulletBomb implements IBullet, ILiving
 	public double y;
 	public double r;
 	public double rMax;
+	public int attack;
 
-	public BulletBomb(double x, double y, double rMax)
+	public BulletBomb(double x, double y, double rMax, int attack)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = rMax / 10;
 		this.rMax = rMax;
+		this.attack = attack;
 	}
 
 	@Override
-	public boolean move(Game game)
+	public boolean move(PhaseBattle phase)
 	{
 		r += 0.05;
 
-		for (IBullet bullet : game.bulletsEnemy) {
-			if (Game.isColliding(this, bullet)) {
-				bullet.damage();
+		for (IBullet bullet : phase.bulletsEnemy) {
+			if (PhaseBattle.isColliding(this, bullet)) {
+				bullet.damage(1);
 			}
 		}
 
@@ -42,7 +44,7 @@ public class BulletBomb implements IBullet, ILiving
 	}
 
 	@Override
-	public void render(Game game, Graphics2D graphics)
+	public void render(PhaseBattle phase, Graphics2D graphics)
 	{
 		{
 			graphics.setColor(Color.white);
@@ -66,7 +68,7 @@ public class BulletBomb implements IBullet, ILiving
 	}
 
 	@Override
-	public void damage()
+	public void damage(int value)
 	{
 
 	}
@@ -87,6 +89,18 @@ public class BulletBomb implements IBullet, ILiving
 	public double getRadius()
 	{
 		return r;
+	}
+
+	@Override
+	public int getToughness()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getAttack()
+	{
+		return attack;
 	}
 
 }

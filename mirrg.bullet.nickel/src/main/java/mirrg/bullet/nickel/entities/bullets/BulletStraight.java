@@ -1,12 +1,12 @@
-package mirrg.bullet.nickel.entities;
+package mirrg.bullet.nickel.entities.bullets;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-import mirrg.bullet.nickel.Game;
 import mirrg.bullet.nickel.entity.IBullet;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public class BulletStraight implements IBullet
 {
@@ -17,8 +17,9 @@ public class BulletStraight implements IBullet
 	public double yy;
 	public double r;
 	public Color color;
+	public int attack;
 
-	public BulletStraight(double x, double y, double xx, double yy, double r, Color color)
+	public BulletStraight(double x, double y, double xx, double yy, double r, Color color, int attack)
 	{
 		this.x = x;
 		this.y = y;
@@ -26,10 +27,11 @@ public class BulletStraight implements IBullet
 		this.yy = yy;
 		this.r = r;
 		this.color = color;
+		this.attack = attack;
 	}
 
 	@Override
-	public boolean move(Game game)
+	public boolean move(PhaseBattle phase)
 	{
 		x += xx;
 		y += yy;
@@ -48,7 +50,7 @@ public class BulletStraight implements IBullet
 	}
 
 	@Override
-	public void render(Game game, Graphics2D graphics)
+	public void render(PhaseBattle phase, Graphics2D graphics)
 	{
 		graphics.setColor(color);
 		graphics.fill(getShape(0));
@@ -67,9 +69,15 @@ public class BulletStraight implements IBullet
 	private int hp = 1;
 
 	@Override
-	public void damage()
+	public void damage(int value)
 	{
-		hp--;
+		hp -= value;
+	}
+
+	@Override
+	public int getAttack()
+	{
+		return attack;
 	}
 
 }

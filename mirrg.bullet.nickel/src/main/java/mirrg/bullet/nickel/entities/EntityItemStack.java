@@ -2,26 +2,26 @@ package mirrg.bullet.nickel.entities;
 
 import java.awt.Color;
 
-import mirrg.bullet.nickel.Game;
-import mirrg.bullet.nickel.item.Stack;
+import mirrg.bullet.nickel.item.IStack;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public class EntityItemStack extends EntityItemAbstract
 {
 
-	private Stack stack;
+	private IStack stack;
 
-	public EntityItemStack(double x, double y, double xOffset, double yOffset, Stack stack)
+	public EntityItemStack(double x, double y, double xOffset, double yOffset, IStack stack)
 	{
 		super(x, y, xOffset, yOffset);
 		this.stack = stack;
 	}
 
 	@Override
-	public void onCought(Game game)
+	public void onCought(PhaseBattle phase)
 	{
-		game.addStack(stack);
-		game.addParticle(new ParticleText(x, y,
-			stack.amount == 1 ? stack.item.name : stack.item.name + "×" + stack.amount,
+		phase.game.inventory.addStack(stack);
+		phase.addParticle(new ParticleText(x, y,
+			stack.getNameInButtle(),
 			20, new Color(255, 128, 128, 64)));
 	}
 

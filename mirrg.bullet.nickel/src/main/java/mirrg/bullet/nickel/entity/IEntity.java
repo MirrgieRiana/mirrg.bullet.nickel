@@ -3,7 +3,7 @@ package mirrg.bullet.nickel.entity;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 
-import mirrg.bullet.nickel.Game;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public interface IEntity
 {
@@ -11,22 +11,22 @@ public interface IEntity
 	/**
 	 * @return true: Die
 	 */
-	public boolean move(Game game);
+	public boolean move(PhaseBattle phase);
 
-	public default void onDie(Game game)
+	public default void onDie(PhaseBattle phase)
 	{
 
 	}
 
-	public void render(Game game, Graphics2D graphics);
+	public void render(PhaseBattle phase, Graphics2D graphics);
 
-	public default void renderOverlay(Game game, Graphics2D graphics)
+	public default void renderOverlay(PhaseBattle phase, Graphics2D graphics)
 	{
 
 	}
 
 	public Shape getShape(double additionalRadius);
 
-	public void damage();
+	public void damage(int value);
 
 }

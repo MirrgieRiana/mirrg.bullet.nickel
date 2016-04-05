@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import mirrg.bullet.nickel.Game;
 import mirrg.bullet.nickel.entity.IParticle;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public class ParticleText implements IParticle
 {
@@ -26,7 +26,7 @@ public class ParticleText implements IParticle
 	}
 
 	@Override
-	public boolean move(Game game)
+	public boolean move(PhaseBattle phase)
 	{
 		limit--;
 
@@ -34,12 +34,12 @@ public class ParticleText implements IParticle
 	}
 
 	@Override
-	public void renderOverlay(Game game, Graphics2D graphics)
+	public void renderOverlay(PhaseBattle phase, Graphics2D graphics)
 	{
 		graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
 		graphics.setColor(color);
 
-		graphics.drawString(text, (int) (x * game.sizeGame.width), (int) (y * game.sizeGame.height));
+		graphics.drawString(text, (int) (x * phase.game.sizeGame.width), (int) (y * phase.game.sizeGame.height));
 	}
 
 }

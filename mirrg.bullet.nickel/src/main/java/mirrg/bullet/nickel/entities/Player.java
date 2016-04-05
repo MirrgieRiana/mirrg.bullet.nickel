@@ -7,32 +7,38 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-import mirrg.bullet.nickel.Game;
-import mirrg.bullet.nickel.entity.ILiving;
+import mirrg.bullet.nickel.IWeapon;
+import mirrg.bullet.nickel.InstanceWeapon;
+import mirrg.bullet.nickel.entities.bullets.BulletBomb;
+import mirrg.bullet.nickel.entity.IPlayer;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
-public class Player implements ILiving
+public class Player implements IPlayer
 {
 
 	public double x;
 	public double y;
 	public double r;
+	public InstanceWeapon weaponLeft;
+	public InstanceWeapon weaponRight;
+	public int invincible = 50;
 
-	public Player(double x, double y, double r)
+	public Player(double x, double y, double r, IWeapon weaponLeft, IWeapon weaponRight)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = r;
+		this.weaponLeft = new InstanceWeapon(weaponLeft, true);
+		this.weaponRight = new InstanceWeapon(weaponRight, true);
 	}
 
-	private int i;
-
 	@Override
-	public boolean move(Game game)
+	public boolean move(PhaseBattle phase)
 	{
 
 		// move
-		double xTo = 1.0 * game.panel.responceApplyStandard.moduleInputStatus.getMouseX() / game.sizeGame.width;
-		double yTo = 1.0 * game.panel.responceApplyStandard.moduleInputStatus.getMouseY() / game.sizeGame.height;
+		double xTo = 1.0 * phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseX() / phase.game.sizeGame.width;
+		double yTo = 1.0 * phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseY() / phase.game.sizeGame.height;
 
 		{
 			double distance = new Point2D.Double(x, y).distance(xTo, yTo);
@@ -55,74 +61,43 @@ public class Player implements ILiving
 
 		}
 
-		// shot
-		if (game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON1) > 0) {
-			if (i % 2 == 0) {
-				double theta = 1.5 * Math.PI;
-				double speed = 0.04;
-
-				game.addBulletPlayer(new BulletStraight(
-					x - 0.01,
-					y,
-					speed * Math.cos(theta),
-					speed * Math.sin(theta),
-					0.01,
-					Color.darkGray));
-				game.addBulletPlayer(new BulletStraight(
-					x + 0.01,
-					y,
-					speed * Math.cos(theta),
-					speed * Math.sin(theta),
-					0.01,
-					Color.darkGray));
-				game.addBulletPlayer(new BulletStraight(
-					x - 0.01,
-					y,
-					speed * Math.cos(theta - 5 * Math.PI / 180),
-					speed * Math.sin(theta - 5 * Math.PI / 180),
-					0.01,
-					Color.darkGray));
-				game.addBulletPlayer(new BulletStraight(
-					x + 0.01,
-					y,
-					speed * Math.cos(theta + 5 * Math.PI / 180),
-					speed * Math.sin(theta + 5 * Math.PI / 180),
-					0.01,
-					Color.darkGray));
-			}
-		} else if (game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON3) > 0) {
-			if (i % 5 == 0) {
-				for (int i = 0; i < 11; i++) {
-					double theta = 1.5 * Math.PI + 8 * (i - 5) * Math.PI / 180;
-					double speed = 0.04;
-					game.addBulletPlayer(new BulletStraight(
-						x,
-						y,
-						speed * Math.cos(theta),
-						speed * Math.sin(theta),
-						0.005,
-						Color.darkGray));
-				}
-			}
+		// auto harvest
+		if (y < 0.15) {
+			phase.doAutoHarvest();
 		}
 
-		i++;
+		// shot
+		if (phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON1) > 0) {
+			weaponLeft.shoot(this, phase);
+		} else if (phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON3) > 0) {
+			weaponRight.shoot(this, phase);
+		}
+		weaponLeft.move(this, phase);
+		weaponRight.move(this, phase);
+
+		if (invincible > 0) invincible--;
 
 		return hp <= 0;
 	}
 
 	@Override
-	public void onDie(Game game)
+	public void onDie(PhaseBattle phase)
 	{
-		game.addBulletPlayer(new BulletBomb(x, y, 0.5));
-		game.invokeLater(game::die);
+		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, 50));
+		phase.invokeLater(phase::die);
 	}
 
+	private int ir;
+
 	@Override
-	public void render(Game game, Graphics2D graphics)
+	public void render(PhaseBattle phase, Graphics2D graphics)
 	{
-		graphics.setColor(Color.white);
-		graphics.fill(getShape(0));
+		if (invincible <= 0 || (ir) % 2 == 0) {
+			graphics.setColor(Color.white);
+			graphics.fill(getShape(0));
+		}
+
+		ir++;
 	}
 
 	@Override
@@ -135,12 +110,12 @@ public class Player implements ILiving
 			(r + additionalRadius) * 2);
 	}
 
-	private int hp = 1;
+	private int hp = 100;
 
 	@Override
-	public void damage()
+	public void damage(int value)
 	{
-		hp--;
+		if (invincible <= 0) hp -= value;
 	}
 
 	@Override
@@ -159,6 +134,24 @@ public class Player implements ILiving
 	public double getRadius()
 	{
 		return r;
+	}
+
+	@Override
+	public int getToughness()
+	{
+		return 1;
+	}
+
+	@Override
+	public IWeapon getWeaponMain()
+	{
+		return weaponLeft.weapon;
+	}
+
+	@Override
+	public IWeapon getWeaponSub()
+	{
+		return weaponRight.weapon;
 	}
 
 }

@@ -8,9 +8,9 @@ import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import mirrg.bullet.nickel.Game;
 import mirrg.bullet.nickel.entity.IEntityItem;
 import mirrg.bullet.nickel.entity.ILiving;
+import mirrg.bullet.nickel.phases.PhaseBattle;
 
 public abstract class EntityItemAbstract implements IEntityItem
 {
@@ -34,7 +34,7 @@ public abstract class EntityItemAbstract implements IEntityItem
 	}
 
 	@Override
-	public boolean move(Game game)
+	public boolean move(PhaseBattle phase)
 	{
 		x += xOffset * 0.2;
 		y += yOffset * 0.2;
@@ -47,19 +47,19 @@ public abstract class EntityItemAbstract implements IEntityItem
 		boolean fallable = true;
 
 		// guide
-		for (ILiving player : game.players) {
+		for (ILiving player : phase.players) {
 			if (player.getShape(r).contains(x, y)) {
-				onCought(game);
-				damage();
+				onCought(phase);
+				damage(1);
 			} else if (player.getShape(rGuide).contains(x, y)) {
 				double distance = new Point2D.Double(x, y).distance(player.getX(), player.getY());
 
-				if (distance < 0.02) {
+				if (distance < 0.03) {
 					x = player.getX();
 					y = player.getY();
 				} else {
 					double theta = Math.atan2(player.getY() - y, player.getX() - x);
-					double speed = 0.02;
+					double speed = 0.03;
 
 					x += speed * Math.cos(theta);
 					y += speed * Math.sin(theta);
@@ -84,10 +84,10 @@ public abstract class EntityItemAbstract implements IEntityItem
 		return hp <= 0;
 	}
 
-	public abstract void onCought(Game game);
+	public abstract void onCought(PhaseBattle phase);
 
 	@Override
-	public void render(Game game, Graphics2D graphics)
+	public void render(PhaseBattle phase, Graphics2D graphics)
 	{
 		graphics.setColor(getColor());
 		graphics.fill(getShape(0));
@@ -116,9 +116,9 @@ public abstract class EntityItemAbstract implements IEntityItem
 	}
 
 	@Override
-	public void damage()
+	public void damage(int value)
 	{
-		hp--;
+		hp -= value;
 	}
 
 	@Override
