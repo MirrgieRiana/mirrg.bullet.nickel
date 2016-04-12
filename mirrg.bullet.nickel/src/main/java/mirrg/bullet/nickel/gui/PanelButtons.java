@@ -1,36 +1,37 @@
 package mirrg.bullet.nickel.gui;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.Font;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 
-import mirrg.bullet.nickel.GameNickel;
+import mirrg.bullet.nickel.core.GameNickel;
 
-public class PanelButtons implements IComponent
+public class PanelButtons extends Container
 {
-
-	public ArrayList<IComponent> components = new ArrayList<>();
 
 	public int rows;
 	public int columns;
+	public int buttonWidth;
+	public int buttonHeight;
 	public Point2D.Double center;
-	public int buttonWidth = 40;
-	public int buttonHeight = 40;
 	public int margin = 5;
+	public Rectangle2D.Double rectangle;
 
-	public PanelButtons(int rows, int columns, Point2D.Double center)
+	public PanelButtons(int rows, int columns, int buttonWidth, int buttonHeight, Point2D.Double center)
 	{
 		this.rows = rows;
 		this.columns = columns;
+		this.buttonWidth = buttonWidth;
+		this.buttonHeight = buttonHeight;
 		this.center = center;
 
-		components.add(new LabelShape(new Rectangle2D.Double(
+		rectangle = new Rectangle2D.Double(
 			center.x - getPanelWidth() / 2,
 			center.y - getPanelHeight() / 2,
 			getPanelWidth(),
-			getPanelHeight()), new Color(64, 0, 0)));
+			getPanelHeight());
+		add(new LabelShape(rectangle, new Color(64, 0, 0)));
 	}
 
 	public int getPanelWidth()
@@ -43,29 +44,25 @@ public class PanelButtons implements IComponent
 		return margin + (buttonHeight + margin) * rows;
 	}
 
-	public void putButton(GameNickel game, int row, int column, Runnable action)
+	public Button putButton(GameNickel game, int row, int column)
 	{
-		components.add(new Button(game, new Rectangle2D.Double(
+		Button button = new Button(game, new Rectangle2D.Double(
 			center.x - getPanelWidth() / 2 + margin + column * (buttonWidth + margin),
 			center.y - getPanelHeight() / 2 + margin + row * (buttonHeight + margin),
 			buttonWidth,
-			buttonHeight), action));
+			buttonHeight));
+		add(button);
+		return button;
 	}
 
-	@Override
-	public void move()
+	public Label putLabel(GameNickel game, int row, int column, String text, Font font)
 	{
-		for (IComponent component : components) {
-			component.move();
-		}
-	}
-
-	@Override
-	public void paint(Graphics2D graphics)
-	{
-		for (IComponent component : components) {
-			component.paint(graphics);
-		}
+		Label label = new Label(new Point2D.Double(
+			center.x - getPanelWidth() / 2 + margin + column * (buttonWidth + margin) + buttonWidth / 2,
+			center.y - getPanelHeight() / 2 + margin + row * (buttonHeight + margin) + buttonHeight / 2),
+			text, font);
+		add(label);
+		return label;
 	}
 
 }

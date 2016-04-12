@@ -1,12 +1,7 @@
 package mirrg.bullet.nickel.item;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
-
-import mirrg.bullet.nickel.Counter;
+import java.util.function.Supplier;
 
 public class Inventory
 {
@@ -15,34 +10,50 @@ public class Inventory
 
 	public void addStack(IStack stack)
 	{
-		if (stack instanceof StackItem) {
-			for (int i = 0; i < stacks.size(); i++) {
-				IStack stack2 = stacks.get(i);
-				if (stack2 instanceof StackItem) {
-					if (((StackItem) stack2).item.equals(((StackItem) stack).item)) {
-						stacks.set(i, new StackItem(((StackItem) stack2).item, ((StackItem) stack2).amount + ((StackItem) stack).amount));
-						return;
-					}
-				}
+		for (int i = 0; i < stacks.size(); i++) {
+			if (stacks.get(i).getOreName().equals(stack.getOreName())) {
+				stacks.set(i, stacks.get(i).copy(stacks.get(i).getAmount() + stack.getAmount()));
+				return;
 			}
 		}
+
 		stacks.add(stack);
 	}
 
-	public void drawScore(Graphics2D graphics, Dimension size, Counter counter)
+	public boolean isCraftable(Recipe recipe)
 	{
-		graphics.setColor(Color.white);
-		graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
-		for (int i = 0; i < stacks.size(); i++) {
+		for (IStack stack : recipe.in.stacks) {
+			IStack stack2 = search(stack.getOreName());
+			if (stack2 == null) return false;
+			if (stack2.getAmount() < stack.getAmount()) return false;
+		}
+		return true;
+	}
 
-			graphics.drawString(stacks.get(i).getName(),
-				0, counter.value + graphics.getFont().getSize());
-			graphics.drawString(
-				"" + stacks.get(i).getAmount(),
-				size.width - 5 - graphics.getFontMetrics().stringWidth("" + stacks.get(i).getAmount()),
-				counter.value + graphics.getFont().getSize());
-			counter.add(graphics.getFont().getSize());
+	public IStack search(String oreName)
+	{
+		for (IStack stack : stacks) {
+			if (stack.getOreName().equals(oreName)) {
+				return stack;
+			}
+		}
+		return null;
+	}
 
+	public void craft(Recipe recipe)
+	{
+		for (Supplier<? extends IStack> supplierStack : recipe.out) {
+			addStack(supplierStack.get());
+		}
+		for (IStack stack : recipe.in.stacks) {
+			IStack stack2 = search(stack.getOreName());
+
+			int amount = stack2.getAmount() - stack.getAmount();
+			if (amount > 0) {
+				stacks.set(stacks.indexOf(stack2), stack.copy(amount));
+			} else {
+				stacks.remove(stack2);
+			}
 		}
 	}
 

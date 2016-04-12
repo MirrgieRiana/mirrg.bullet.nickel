@@ -1,33 +1,48 @@
 package mirrg.bullet.nickel.item;
 
-import mirrg.bullet.nickel.IWeapon;
+import java.awt.Color;
+import java.util.ArrayList;
 
-public class StackWeapon implements IStack
+import mirrg.bullet.nickel.weapon.IWeapon;
+
+public class StackWeapon extends StackAbstract<IWeapon>
 {
-
-	public final IWeapon weapon;
 
 	public StackWeapon(IWeapon weapon)
 	{
-		this.weapon = weapon;
+		this(weapon, 1);
 	}
 
-	@Override
-	public String getNameInButtle()
+	public StackWeapon(IWeapon weapon, int amount)
 	{
-		return weapon.getName();
+		super(weapon, amount);
 	}
 
 	@Override
 	public String getName()
 	{
-		return weapon.getName();
+		return item.getName();
 	}
 
 	@Override
-	public int getAmount()
+	public Color getColor()
 	{
-		return 1;
+		return item.getColor();
+	}
+
+	@Override
+	public void getMessages(ArrayList<String> messages)
+	{
+		super.getMessages(messages);
+		messages.add("Tier：" + item.getTier());
+		messages.add("集中火力：" + (int) item.getDamagePerSecond(false));
+		messages.add("拡散火力：" + (int) item.getDamagePerSecond(true));
+	}
+
+	@Override
+	public IStack copy(int amount)
+	{
+		return new StackWeapon(item, amount);
 	}
 
 }

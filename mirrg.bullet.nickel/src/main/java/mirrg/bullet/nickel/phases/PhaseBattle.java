@@ -7,17 +7,20 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
-import mirrg.bullet.nickel.Counter;
-import mirrg.bullet.nickel.GameNickel;
-import mirrg.bullet.nickel.IPhase;
-import mirrg.bullet.nickel.IStage;
-import mirrg.bullet.nickel.entities.Player;
+import com.sun.glass.events.KeyEvent;
+
+import mirrg.bullet.nickel.contents.entities.EntityPlayer;
+import mirrg.bullet.nickel.core.GameNickel;
 import mirrg.bullet.nickel.entity.IBullet;
 import mirrg.bullet.nickel.entity.IEntity;
 import mirrg.bullet.nickel.entity.IEntityItem;
 import mirrg.bullet.nickel.entity.ILiving;
 import mirrg.bullet.nickel.entity.IParticle;
 import mirrg.bullet.nickel.entity.IPlayer;
+import mirrg.bullet.nickel.gui.Counter;
+import mirrg.bullet.nickel.phase.IPhase;
+import mirrg.bullet.nickel.stage.ISettingStage;
+import mirrg.bullet.nickel.stage.IStage;
 import mirrg.util.hydrogen.HString;
 
 public class PhaseBattle implements IPhase
@@ -34,65 +37,97 @@ public class PhaseBattle implements IPhase
 
 	public IPlayer player;
 	private int score = 0;
-	public int life = 5;
-	public int clearing = 0;
-	public int dying = 0;
+	public int life;
+	public int ending = 0;
+	public ISettingStage settingStage;
 	public IStage stage;
 
-	public PhaseBattle(GameNickel game, IStage stage)
+	public PhaseBattle(GameNickel game, ISettingStage settingStage)
 	{
 		this.game = game;
-		this.stage = stage;
+		this.settingStage = settingStage;
+	}
 
+	@Override
+	public void init()
+	{
 		respawn();
 
+		stage = settingStage.createStage();
 		stage.init(this);
+		life = 2;
 	}
 
 	@Override
 	public void move()
 	{
+		if (game.panel.responceApplyStandard.moduleInputStatus.getKeyBoard().getState(KeyEvent.VK_ESCAPE) == 1) {
 
-		stage.move(this);
+			IPhase phase = new PhaseMenu(game, this);
+			phase.init();
+			game.setPhase(phase);
 
-		moveEntities(players);
-		moveEntities(enemies);
-		moveBullets(bulletsPlayer, enemies);
-		moveBullets(bulletsEnemy, players);
-		moveEntities(entityItems);
+		} else {
 
-		for (int i = 0; i < particles.size(); i++) {
-			if (particles.get(i).move(this)) {
-				particles.remove(i);
-				i--;
-				continue;
+			stage.move();
+
+			moveEntities(players);
+			moveEntities(enemies);
+			moveBullets(bulletsPlayer, enemies);
+			moveBullets(bulletsEnemy, players);
+			moveEntities(entityItems);
+
+			for (int i = 0; i < particles.size(); i++) {
+				if (particles.get(i).move(this)) {
+					particles.remove(i);
+					i--;
+					continue;
+				}
 			}
-		}
 
-		listenersInvokeLator.forEach(Runnable::run);
-		listenersInvokeLator.clear();
+			listenersInvokeLator.forEach(Runnable::run);
+			listenersInvokeLator.clear();
 
-		if (stage.isFinished()) {
-			if (enemies.size() == 0) {
-				clearing++;
+			if (stage.isClearing()) {
+				ending++;
 
-				if (clearing == 30) {
+				if (ending == 30) {
 					doAutoHarvest();
 				}
 
-				if (clearing == 100) {
-					game.setPhase(new PhaseStages(game));
+				if (ending == 100) {
+					game.onClear(settingStage);
+
+					IPhase phase = new PhaseStages(game);
+					phase.init();
+					game.setPhase(phase);
 				}
-			}
-		}
 
-		if (players.size() == 0) {
-			dying++;
-			if (dying == 100) {
-				game.setPhase(new PhaseStages(game));
 			}
-		}
 
+			if (stage.isTimeouting()) {
+				ending++;
+
+				if (ending == 100) {
+					IPhase phase = new PhaseStages(game);
+					phase.init();
+					game.setPhase(phase);
+				}
+
+			}
+
+			if (players.size() == 0) {
+				ending++;
+
+				if (ending == 100) {
+					IPhase phase = new PhaseStages(game);
+					phase.init();
+					game.setPhase(phase);
+				}
+
+			}
+
+		}
 	}
 
 	private void moveEntities(ArrayList<? extends IEntity> entities)
@@ -117,18 +152,43 @@ public class PhaseBattle implements IPhase
 				continue;
 			}
 			for (int j = 0; j < targets.size(); j++) {
-				if (isColliding(targets.get(j), bullets.get(i))) {
-					targets.get(j).damage(bullets.get(i).getAttack());
-					bullets.get(i).damage(targets.get(j).getToughness());
+				if (tryCollide(targets.get(j), bullets.get(i))) {
 					continue;
 				}
 			}
 		}
 	}
 
+	public static boolean tryCollide(ILiving living, IBullet bullet)
+	{
+		if (isColliding(living, bullet)) {
+			living.damage(bullet.getAttack());
+			bullet.damage(living.getToughness());
+			return true;
+		}
+		return false;
+	}
+
 	public static boolean isColliding(ILiving living, IEntity entity)
 	{
 		return entity.getShape(living.getRadius()).contains(living.getX(), living.getY());
+	}
+
+	public static ILiving getNearest(ArrayList<ILiving> livings, double x, double y)
+	{
+		if (livings.size() == 0) return null;
+
+		double[] distances = new double[livings.size()];
+		for (int i = 0; i < livings.size(); i++) {
+			distances[i] = livings.get(i).getDistance(x, y);
+		}
+
+		int counter = 0;
+		for (int i = 1; i < livings.size(); i++) {
+			if (distances[counter] > distances[i]) counter = i;
+		}
+
+		return livings.get(counter);
 	}
 
 	public ArrayList<Runnable> listenersInvokeLator = new ArrayList<>();
@@ -178,7 +238,7 @@ public class PhaseBattle implements IPhase
 
 	public void respawn()
 	{
-		player = new Player(0.5, 0.75, 0.005, game.weaponMain.weapon, game.weaponSub.weapon);
+		player = new EntityPlayer(0.5, 0.75, 0.005, game.weaponMain.item, game.weaponSub.item);
 		addPlayer(player);
 	}
 
@@ -286,13 +346,9 @@ public class PhaseBattle implements IPhase
 			0, counter.value + graphics.getFont().getSize());
 		counter.add(graphics.getFont().getSize());
 
-		graphics.drawString("clearing: " + clearing,
+		graphics.drawString("ending: " + ending,
 			0, counter.value + graphics.getFont().getSize());
 		counter.add(graphics.getFont().getSize());
-
-		graphics.drawString("dying: " + dying,
-			0, counter.value + graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize() * 2);
 
 		graphics.drawString("残機: " + HString.rept("★", life),
 			0, counter.value + graphics.getFont().getSize());

@@ -1,33 +1,31 @@
 package mirrg.bullet.nickel.item;
 
-public class StackItem implements IStack
+import java.awt.Color;
+
+public class StackItem extends StackAbstract<IItem>
 {
 
-	public final Item item;
-	public final int amount;
-
-	public StackItem(Item item, int amount)
+	public StackItem(IItem item, int amount)
 	{
-		this.item = item;
-		this.amount = amount;
-	}
-
-	@Override
-	public String getNameInButtle()
-	{
-		return amount == 1 ? item.name : item.name + "×" + amount;
+		super(item, amount);
 	}
 
 	@Override
 	public String getName()
 	{
-		return item.name;
+		return item.getName();
 	}
 
 	@Override
-	public int getAmount()
+	public Color getColor()
 	{
-		return amount;
+		return item.getColor();
+	}
+
+	@Override
+	public IStack copy(int amount)
+	{
+		return new StackItem(item, amount);
 	}
 
 }

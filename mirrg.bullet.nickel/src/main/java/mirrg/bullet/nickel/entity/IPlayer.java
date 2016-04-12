@@ -1,6 +1,6 @@
 package mirrg.bullet.nickel.entity;
 
-import mirrg.bullet.nickel.IWeapon;
+import mirrg.bullet.nickel.weapon.IWeapon;
 
 public interface IPlayer extends ILiving
 {

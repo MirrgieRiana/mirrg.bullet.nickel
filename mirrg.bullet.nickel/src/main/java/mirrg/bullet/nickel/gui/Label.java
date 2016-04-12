@@ -11,6 +11,7 @@ public class Label implements IComponent
 	public Point2D.Double base;
 	public String text;
 	public Font font;
+	public Color color = Color.white;
 	public int alignVertical;
 	public int alignHorizontal;
 
@@ -36,6 +37,12 @@ public class Label implements IComponent
 		this.alignHorizontal = alignHorizontal;
 	}
 
+	public Label setColor(Color color)
+	{
+		this.color = color;
+		return this;
+	}
+
 	@Override
 	public void move()
 	{
@@ -46,7 +53,7 @@ public class Label implements IComponent
 	public void paint(Graphics2D graphics)
 	{
 		graphics.setFont(font);
-		graphics.setColor(Color.white);
+		graphics.setColor(color);
 		graphics.drawString(
 			text,
 			(int) (base.x - graphics.getFontMetrics().stringWidth(text) * alignHorizontal / 2),
