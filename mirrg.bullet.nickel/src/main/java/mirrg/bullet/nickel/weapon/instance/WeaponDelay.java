@@ -1,6 +1,4 @@
-package mirrg.bullet.nickel.weapon;
-
-import java.awt.Color;
+package mirrg.bullet.nickel.weapon.instance;
 
 import mirrg.bullet.nickel.entity.ILiving;
 import mirrg.bullet.nickel.phases.PhaseBattle;
@@ -26,30 +24,6 @@ public class WeaponDelay implements IWeapon
 			weapon.move(living, phase, false, isPlayer);
 			delay--;
 		}
-	}
-
-	@Override
-	public String getName()
-	{
-		return weapon.getName();
-	}
-
-	@Override
-	public int getDelay()
-	{
-		return weapon.getDelay() + delay;
-	}
-
-	@Override
-	public double getDamagePerSecond(boolean isScatter)
-	{
-		return weapon.getDamagePerSecond(isScatter);
-	}
-
-	@Override
-	public Color getColor()
-	{
-		return weapon.getColor();
 	}
 
 }

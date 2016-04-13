@@ -8,7 +8,7 @@ import mirrg.bullet.nickel.contents.weapons.WeaponBulletsIron;
 import mirrg.bullet.nickel.item.StackItem;
 import mirrg.bullet.nickel.phases.PhaseBattle;
 import mirrg.bullet.nickel.stage.IStage;
-import mirrg.bullet.nickel.weapon.WeaponDelay;
+import mirrg.bullet.nickel.weapon.instance.WeaponDelay;
 
 public class Stage8 implements IStage
 {

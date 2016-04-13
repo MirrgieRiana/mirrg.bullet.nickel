@@ -1,12 +1,12 @@
-package mirrg.bullet.nickel.weapon;
+package mirrg.bullet.nickel.weapon.card;
 
-public class KeyBase<T> implements IKey<T>
+public class Key<T>
 {
 
 	private String string;
 	private T valueDefault;
 
-	public KeyBase(String string, T valueDefault)
+	public Key(String string, T valueDefault)
 	{
 		this.string = string;
 		this.valueDefault = valueDefault;
@@ -18,13 +18,11 @@ public class KeyBase<T> implements IKey<T>
 		return string;
 	}
 
-	@Override
 	public T cast(Object value)
 	{
 		return (T) value;
 	}
 
-	@Override
 	public T getValueDefault()
 	{
 		return valueDefault;

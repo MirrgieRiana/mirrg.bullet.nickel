@@ -10,7 +10,8 @@ import java.awt.geom.Point2D;
 import mirrg.bullet.nickel.contents.entities.bullets.BulletBomb;
 import mirrg.bullet.nickel.entity.IPlayer;
 import mirrg.bullet.nickel.phases.PhaseBattle;
-import mirrg.bullet.nickel.weapon.IWeapon;
+import mirrg.bullet.nickel.weapon.card.CardWeapon;
+import mirrg.bullet.nickel.weapon.instance.IWeapon;
 
 public class EntityPlayer implements IPlayer
 {
@@ -18,17 +19,22 @@ public class EntityPlayer implements IPlayer
 	public double x;
 	public double y;
 	public double r;
+	public CardWeapon cardWeaponLeft;
+	public CardWeapon cardWeaponRight;
 	public IWeapon weaponLeft;
 	public IWeapon weaponRight;
 	public int invincible = 50;
 
-	public EntityPlayer(double x, double y, double r, IWeapon weaponLeft, IWeapon weaponRight)
+	public EntityPlayer(double x, double y, double r, CardWeapon cardWeaponLeft, CardWeapon cardWeaponRight)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = r;
-		this.weaponLeft = weaponLeft;
-		this.weaponRight = weaponRight;
+		this.cardWeaponLeft = cardWeaponLeft;
+		this.cardWeaponRight = cardWeaponRight;
+
+		weaponLeft = cardWeaponLeft.createWeapon();
+		weaponRight = cardWeaponRight.createWeapon();
 	}
 
 	@Override
@@ -86,7 +92,7 @@ public class EntityPlayer implements IPlayer
 	@Override
 	public void onDie(PhaseBattle phase)
 	{
-		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, (int) (weaponLeft.getDamagePerSecond(true) / 10)));
+		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, (int) (cardWeaponLeft.getDamagePerSecond(true) / 10)));
 		phase.invokeLater(phase::die);
 	}
 

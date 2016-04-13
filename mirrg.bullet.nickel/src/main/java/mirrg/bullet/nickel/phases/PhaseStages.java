@@ -37,8 +37,7 @@ public class PhaseStages extends PhaseGUIBase
 
 		for (ISettingStage settingStage : SettingStages.values()) {
 			Button button = panelButtons.putButton(game, settingStage.getR(), settingStage.getC());
-			Boolean cleared = game.clearedStage.get(settingStage.getName());
-			if (cleared != null && cleared) {
+			if (game.availableStages.contains(settingStage.getName())) {
 				button
 					.setOnClick(() -> {
 						IPhase phase = new PhaseBattle(game, settingStage);

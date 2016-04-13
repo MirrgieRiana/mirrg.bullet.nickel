@@ -1,48 +1,48 @@
-package mirrg.bullet.nickel.weapon;
+package mirrg.bullet.nickel.weapon.card;
 
 import java.awt.Color;
 import java.util.Hashtable;
 import java.util.function.Function;
 
-public abstract class BatteryAbstract implements IBattery
+public abstract class CardBatteryAbstract implements ICardBattery
 {
 
-	private Hashtable<IKey<?>, Object> fields = new Hashtable<>();
+	private Hashtable<Key<?>, Object> fields = new Hashtable<>();
 
-	public BatteryAbstract(BatteryAbstract... parents)
+	public CardBatteryAbstract(CardBatteryAbstract... parents)
 	{
-		for (BatteryAbstract parent : parents) {
+		for (CardBatteryAbstract parent : parents) {
 			fields.putAll(parent.fields);
 		}
 	}
 
-	public BatteryAbstract set(Object key, Void value)
+	public CardBatteryAbstract set(Object key, Void value)
 	{
 		fields.remove(key);
 		return this;
 	}
 
-	private <T> BatteryAbstract setImpl(IKey<T> key, T value)
+	private <T> CardBatteryAbstract setImpl(Key<T> key, T value)
 	{
 		fields.put(key, value);
 		return this;
 	}
 
-	private <T> T getImpl(IKey<T> key)
+	private <T> T getImpl(Key<T> key)
 	{
 		T value = key.cast(fields.get(key));
 		if (value == null) return key.getValueDefault();
 		return value;
 	}
 
-	public <T> BatteryAbstract map(IKey<T> key, Function<T, T> value)
+	public <T> CardBatteryAbstract map(Key<T> key, Function<T, T> value)
 	{
 		return setImpl(key, value.apply(getImpl(key)));
 	}
 
 	///////
 
-	public BatteryAbstract set(KeyInteger key, int value)
+	public CardBatteryAbstract set(KeyInteger key, int value)
 	{
 		return setImpl(key, value);
 	}
@@ -52,7 +52,7 @@ public abstract class BatteryAbstract implements IBattery
 		return getImpl(key);
 	}
 
-	public BatteryAbstract set(KeyDouble key, double value)
+	public CardBatteryAbstract set(KeyDouble key, double value)
 	{
 		return setImpl(key, value);
 	}
@@ -62,7 +62,7 @@ public abstract class BatteryAbstract implements IBattery
 		return getImpl(key);
 	}
 
-	public BatteryAbstract set(KeyBoolean key, boolean value)
+	public CardBatteryAbstract set(KeyBoolean key, boolean value)
 	{
 		return setImpl(key, value);
 	}
@@ -72,7 +72,7 @@ public abstract class BatteryAbstract implements IBattery
 		return getImpl(key);
 	}
 
-	public BatteryAbstract set(KeyColor key, Color value)
+	public CardBatteryAbstract set(KeyColor key, Color value)
 	{
 		return setImpl(key, value);
 	}

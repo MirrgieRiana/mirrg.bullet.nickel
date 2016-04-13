@@ -6,10 +6,10 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-import java.util.Hashtable;
+import java.util.HashSet;
 
 import mirrg.bullet.nickel.contents.SettingStages;
-import mirrg.bullet.nickel.contents.weapons.bullets.TypeWeaponBullets;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponBullets;
 import mirrg.bullet.nickel.gui.Counter;
 import mirrg.bullet.nickel.item.Inventory;
 import mirrg.bullet.nickel.item.StackWeapon;
@@ -23,7 +23,7 @@ public class GameNickel implements IGame
 	public PanelNickel panel;
 
 	public Inventory inventory;
-	public Hashtable<String, Boolean> clearedStage = new Hashtable<>();
+	public HashSet<String> availableStages = new HashSet<>();
 
 	public int scoreMax;
 
@@ -47,11 +47,11 @@ public class GameNickel implements IGame
 
 		scoreMax = 100;
 		inventory = new Inventory();
-		weaponMain = new StackWeapon(TypeWeaponBullets.nickel.create("P", true));
+		weaponMain = new StackWeapon(SupplierCardWeaponBullets.nickel.get("P", true));
 		inventory.addStack(weaponMain);
-		weaponSub = new StackWeapon(TypeWeaponBullets.calcite.create("P", true));
+		weaponSub = new StackWeapon(SupplierCardWeaponBullets.calcite.get("P", true));
 		inventory.addStack(weaponSub);
-		clearedStage.put(SettingStages.landOpening.name, true);
+		availableStages.add(SettingStages.landOpening.name);
 
 		updateLayout(width, height);
 		{
@@ -167,21 +167,21 @@ public class GameNickel implements IGame
 		ISettingStage s;
 
 		s = SettingStages.get(settingStage.getR() - 1, settingStage.getC());
-		if (s != null) clear(s);
+		if (s != null) markAvailable(s);
 
 		s = SettingStages.get(settingStage.getR() + 1, settingStage.getC());
-		if (s != null) clear(s);
+		if (s != null) markAvailable(s);
 
 		s = SettingStages.get(settingStage.getR(), settingStage.getC() - 1);
-		if (s != null) clear(s);
+		if (s != null) markAvailable(s);
 
 		s = SettingStages.get(settingStage.getR(), settingStage.getC() + 1);
-		if (s != null) clear(s);
+		if (s != null) markAvailable(s);
 	}
 
-	public void clear(ISettingStage settingStage)
+	public void markAvailable(ISettingStage settingStage)
 	{
-		clearedStage.put(settingStage.getName(), true);
+		availableStages.add(settingStage.getName());
 	}
 
 }

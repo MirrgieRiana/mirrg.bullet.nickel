@@ -5,8 +5,6 @@ import mirrg.bullet.nickel.item.IItem;
 public interface ISettingStage
 {
 
-	public IStage createStage();
-
 	public String getName();
 
 	public String getLabel();
@@ -16,5 +14,7 @@ public interface ISettingStage
 	public int getR();
 
 	public int getC();
+
+	public IStage createStage();
 
 }

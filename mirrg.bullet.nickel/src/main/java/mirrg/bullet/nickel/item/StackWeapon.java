@@ -3,17 +3,17 @@ package mirrg.bullet.nickel.item;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import mirrg.bullet.nickel.weapon.IWeapon;
+import mirrg.bullet.nickel.weapon.card.CardWeapon;
 
-public class StackWeapon extends StackAbstract<IWeapon>
+public class StackWeapon extends StackAbstract<CardWeapon>
 {
 
-	public StackWeapon(IWeapon weapon)
+	public StackWeapon(CardWeapon weapon)
 	{
 		this(weapon, 1);
 	}
 
-	public StackWeapon(IWeapon weapon, int amount)
+	public StackWeapon(CardWeapon weapon, int amount)
 	{
 		super(weapon, amount);
 	}

@@ -60,7 +60,8 @@ public class PhaseGUIBase implements IPhase
 		putButton(() -> new PhaseCraft(game, Recipes.recipesUpgrade), "武器強化", counter);
 		putButton(() -> new PhaseCraft(game, Recipes.recipesCombine), "素材加工", counter);
 		putButton(() -> new PhaseCraft(game, Recipes.recipesRefine), "素材精錬", counter);
-		putButton(() -> new PhaseCraft(game, Recipes.recipesDebug), "デバッグ", counter);
+		putButton(() -> new PhaseCraft(game, Recipes.recipesDebug), "デバッグ入手", counter);
+		putButton(() -> new PhaseDebug(game), "デバッグ機能", counter);
 
 	}
 

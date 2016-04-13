@@ -16,7 +16,7 @@ import mirrg.bullet.nickel.contents.entities.bullets.BulletBomb;
 import mirrg.bullet.nickel.entity.ILiving;
 import mirrg.bullet.nickel.item.IStack;
 import mirrg.bullet.nickel.phases.PhaseBattle;
-import mirrg.bullet.nickel.weapon.IWeapon;
+import mirrg.bullet.nickel.weapon.instance.IWeapon;
 
 public class EnemyBase implements ILiving
 {

@@ -3,11 +3,12 @@ package mirrg.bullet.nickel.contents;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import mirrg.bullet.nickel.contents.weapons.bullets.TypeWeaponBullets;
-import mirrg.bullet.nickel.contents.weapons.bullets.TypeWeaponBurst;
-import mirrg.bullet.nickel.contents.weapons.bullets.TypeWeaponChunk;
-import mirrg.bullet.nickel.contents.weapons.bullets.TypeWeaponEmitter;
-import mirrg.bullet.nickel.contents.weapons.bullets.TypeWeaponSpikes;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponBullets;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponBurst;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponChunk;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponEmitter;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponSpark;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponSpikes;
 import mirrg.bullet.nickel.item.Recipe;
 import mirrg.bullet.nickel.item.StackItem;
 import mirrg.bullet.nickel.item.StackWeapon;
@@ -87,35 +88,39 @@ public class Recipes
 
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.calcite, 1)),
-			() -> new StackWeapon(TypeWeaponBullets.calcite.create("P", true))),
+			() -> new StackWeapon(SupplierCardWeaponBullets.calcite.get("P", true))),
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.nickel, 1)),
-			() -> new StackWeapon(TypeWeaponBullets.nickel.create("P", true))),
+			() -> new StackWeapon(SupplierCardWeaponBullets.nickel.get("P", true))),
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.stone, 5)),
-			() -> new StackWeapon(TypeWeaponBullets.stone.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponBullets.stone.get("L", true))),
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.calcite, 5)),
-			() -> new StackWeapon(TypeWeaponBullets.calcite.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponBullets.calcite.get("L", true))),
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.nickel, 5)),
-			() -> new StackWeapon(TypeWeaponBullets.nickel.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponBullets.nickel.get("L", true))),
 
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.dirt, 7)),
-			() -> new StackWeapon(TypeWeaponBurst.dirt.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponBurst.dirt.get("L", true))),
 
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.copper, 8)),
-			() -> new StackWeapon(TypeWeaponChunk.copper.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponChunk.copper.get("L", true))),
 
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.grass, 10)),
-			() -> new StackWeapon(TypeWeaponSpikes.grass.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponSpikes.grass.get("L", true))),
 
 		addCasingBullets(new Recipe()
 			.addIn(new StackItem(Items.dirt, 15)),
-			() -> new StackWeapon(TypeWeaponEmitter.dirt.create("L", true))),
+			() -> new StackWeapon(SupplierCardWeaponSpark.dirt.get("L", true))),
+
+		addCasingBullets(new Recipe()
+			.addIn(new StackItem(Items.dirt, 16)),
+			() -> new StackWeapon(SupplierCardWeaponEmitter.stone.get("L", true))),
 
 	})
 		.sorted((a, b) -> {

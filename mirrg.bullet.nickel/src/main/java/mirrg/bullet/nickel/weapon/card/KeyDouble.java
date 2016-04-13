@@ -1,6 +1,6 @@
-package mirrg.bullet.nickel.weapon;
+package mirrg.bullet.nickel.weapon.card;
 
-public class KeyDouble extends KeyBase<Double>
+public class KeyDouble extends Key<Double>
 {
 
 	public KeyDouble(String string, double valueDefault)

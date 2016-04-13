@@ -1,6 +1,6 @@
-package mirrg.bullet.nickel.weapon;
+package mirrg.bullet.nickel.weapon.card;
 
-public class KeyInteger extends KeyBase<Integer>
+public class KeyInteger extends Key<Integer>
 {
 
 	public KeyInteger(String string, int valueDefault)
