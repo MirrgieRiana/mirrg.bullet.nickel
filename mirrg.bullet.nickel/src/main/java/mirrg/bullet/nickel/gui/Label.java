@@ -8,13 +8,6 @@ import java.awt.geom.Point2D;
 public class Label implements IComponent
 {
 
-	public Point2D.Double base;
-	public String text;
-	public Font font;
-	public Color color = Color.white;
-	public int alignVertical;
-	public int alignHorizontal;
-
 	public static final int TOP = 2;
 	public static final int MIDDLE = 1;
 	public static final int BOTTOM = 0;
@@ -22,6 +15,10 @@ public class Label implements IComponent
 	public static final int LEFT = 0;
 	public static final int CENTER = 1;
 	public static final int RIGHT = 2;
+
+	private Point2D.Double base;
+	private int alignVertical;
+	private int alignHorizontal;
 
 	public Label(Point2D.Double base, String text, Font font)
 	{
@@ -37,9 +34,27 @@ public class Label implements IComponent
 		this.alignHorizontal = alignHorizontal;
 	}
 
+	private Color color = Color.white;
+
 	public Label setColor(Color color)
 	{
 		this.color = color;
+		return this;
+	}
+
+	private String text;
+
+	public Label setText(String text)
+	{
+		this.text = text;
+		return this;
+	}
+
+	private Font font;
+
+	public Label setFont(Font font)
+	{
+		this.font = font;
 		return this;
 	}
 

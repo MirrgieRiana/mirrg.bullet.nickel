@@ -81,6 +81,8 @@ public class CardBatteryBullets extends CardBatteryAbstract
 					double bullets = get(BULLETS);
 					if (get(BULLETS) - bullets > Math.random()) bullets++;
 
+					double randomNoizAngle = Math.random();
+
 					for (int b = 0; b < bullets; b++) {
 						double x = living.getX();
 						double y = living.getY();
@@ -91,7 +93,7 @@ public class CardBatteryBullets extends CardBatteryAbstract
 
 						theta += get(ANGLE_PER_WAY) * (w - (ways - 1) * 0.5) * Math.PI / 180;
 						theta += get(ANGLE_PER_BULLET) * (b - (bullets - 1) * 0.5) * Math.PI / 180;
-						theta += get(NOIZ_ANGLE) * (Math.random() * 2 - 1) * Math.PI / 180;
+						theta += get(NOIZ_ANGLE) * (randomNoizAngle * 2 - 1) * Math.PI / 180;
 						theta += get(ANGLE_OFFSET) * Math.PI / 180;
 						theta += get(ANGLE_PER_TIME) * times * Math.PI / 180;
 

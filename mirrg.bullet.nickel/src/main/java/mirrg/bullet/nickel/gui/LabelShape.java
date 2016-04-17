@@ -7,8 +7,8 @@ import java.awt.Shape;
 public class LabelShape implements IComponent
 {
 
-	public Shape shape;
-	public Color color;
+	private Shape shape;
+	private Color color;
 
 	public LabelShape(Shape shape, Color color)
 	{

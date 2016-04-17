@@ -94,9 +94,9 @@ public abstract class EntityItemAbstract implements IEntityItem
 		graphics.fill(getShape(0));
 
 		{
-			graphics.setColor(Color.white);
+			graphics.setColor(getColor().brighter().brighter());
 			Stroke stroke = graphics.getStroke();
-			graphics.setStroke(new BasicStroke(0.003f));
+			graphics.setStroke(new BasicStroke(0.002f));
 
 			graphics.draw(getShape(0));
 

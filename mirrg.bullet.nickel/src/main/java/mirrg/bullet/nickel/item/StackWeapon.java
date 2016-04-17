@@ -19,9 +19,15 @@ public class StackWeapon extends StackAbstract<CardWeapon>
 	}
 
 	@Override
-	public String getName()
+	public String getNameLocalized()
 	{
-		return item.getName();
+		return item.getNameLocalized();
+	}
+
+	@Override
+	public String getNameOre()
+	{
+		return item.getNameOre();
 	}
 
 	@Override
@@ -37,6 +43,7 @@ public class StackWeapon extends StackAbstract<CardWeapon>
 		messages.add("Tier：" + item.getTier());
 		messages.add("集中火力：" + (int) item.getDamagePerSecond(false));
 		messages.add("拡散火力：" + (int) item.getDamagePerSecond(true));
+		messages.add("ボム火力：" + (int) item.getDamageBomb());
 	}
 
 	@Override

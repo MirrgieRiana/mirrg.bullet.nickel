@@ -11,21 +11,24 @@ import java.util.ArrayList;
 import com.sun.glass.events.KeyEvent;
 
 import mirrg.bullet.nickel.core.GameNickel;
+import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.gui.Counter;
 import mirrg.bullet.nickel.gui.IComponent;
 import mirrg.bullet.nickel.gui.PanelButtons;
 import mirrg.bullet.nickel.phase.IPhase;
 
-public class PhaseMenu implements IPhase
+public class PhasePause implements IPhase
 {
 
 	private GameNickel game;
+	private SessionNickel session;
 	private IPhase parent;
 	private ArrayList<IComponent> components = new ArrayList<>();
 
-	public PhaseMenu(GameNickel game, IPhase parent)
+	public PhasePause(GameNickel game, SessionNickel session, IPhase parent)
 	{
 		this.game = game;
+		this.session = session;
 		this.parent = parent;
 	}
 
@@ -52,14 +55,14 @@ public class PhaseMenu implements IPhase
 
 		{
 			panelButtons.putButton(game, 0, 0)
-				.setOnClick(() -> {
+				.setOnMouseUp(() -> {
 					game.setPhase(parent);
 				});
 			panelButtons.putLabel(game, 0, 0, "戦闘続行", new Font(Font.SANS_SERIF, Font.PLAIN, 24));
 
 			panelButtons.putButton(game, 1, 0)
-				.setOnClick(() -> {
-					IPhase phase = new PhaseStages(game);
+				.setOnMouseUp(() -> {
+					IPhase phase = new PhaseStages(game, session);
 					phase.init();
 					game.setPhase(phase);
 				});

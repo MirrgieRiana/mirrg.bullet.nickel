@@ -11,9 +11,15 @@ public class StackItem extends StackAbstract<IItem>
 	}
 
 	@Override
-	public String getName()
+	public String getNameLocalized()
 	{
-		return item.getName();
+		return item.getNameLocalized();
+	}
+
+	@Override
+	public String getNameOre()
+	{
+		return item.getNameOre();
 	}
 
 	@Override

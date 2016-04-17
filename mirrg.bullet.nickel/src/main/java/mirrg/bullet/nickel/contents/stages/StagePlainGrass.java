@@ -3,6 +3,7 @@ package mirrg.bullet.nickel.contents.stages;
 import mirrg.bullet.nickel.contents.Items;
 import mirrg.bullet.nickel.contents.entities.EnemyFairy1;
 import mirrg.bullet.nickel.contents.entities.EnemyFairy2;
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponSpark;
 import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponSpikes;
 import mirrg.bullet.nickel.item.StackItem;
 import mirrg.bullet.nickel.weapon.instance.WeaponDelay;
@@ -36,7 +37,7 @@ public class StagePlainGrass extends StageAbstract
 	{
 		if (age == A) {
 			addNorm();
-			double dps = 50;
+			double dps = 75;
 			double seconds = 10;
 			phase.addEnemy(new EnemyFairy2(0.5, 0, 0.05, (int) (dps * seconds), 0.003, (int) (30 * seconds))
 				.setBoss(true)
@@ -47,7 +48,8 @@ public class StagePlainGrass extends StageAbstract
 				.addWeapon(new WeaponDelay(112, SupplierCardWeaponSpikes.grass.get("M", false).createWeapon()))
 				.addWeapon(new WeaponDelay(115, SupplierCardWeaponSpikes.grass.get("M", false).createWeapon()))
 				.addWeapon(new WeaponDelay(118, SupplierCardWeaponSpikes.grass.get("M", false).createWeapon()))
-				.addStack(() -> new StackItem(Items.grass, 1), 0.75, 10)
+				.addWeapon(new WeaponDelay(100, SupplierCardWeaponSpark.grass.get("M", false).createWeapon()))
+				.addStack(() -> new StackItem(Items.grass, 1), 0.75, 5)
 				.hookOnDie(this::addShootdown));
 		}
 		A += 20;

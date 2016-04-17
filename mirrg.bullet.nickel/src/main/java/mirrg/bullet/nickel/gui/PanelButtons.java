@@ -10,13 +10,12 @@ import mirrg.bullet.nickel.core.GameNickel;
 public class PanelButtons extends Container
 {
 
-	public int rows;
-	public int columns;
-	public int buttonWidth;
-	public int buttonHeight;
-	public Point2D.Double center;
-	public int margin = 5;
-	public Rectangle2D.Double rectangle;
+	private int rows;
+	private int columns;
+	private int buttonWidth;
+	private int buttonHeight;
+	private Point2D.Double center;
+	private int margin = 5;
 
 	public PanelButtons(int rows, int columns, int buttonWidth, int buttonHeight, Point2D.Double center)
 	{
@@ -26,12 +25,19 @@ public class PanelButtons extends Container
 		this.buttonHeight = buttonHeight;
 		this.center = center;
 
-		rectangle = new Rectangle2D.Double(
+		area = new Rectangle2D.Double(
 			center.x - getPanelWidth() / 2,
 			center.y - getPanelHeight() / 2,
 			getPanelWidth(),
 			getPanelHeight());
-		add(new LabelShape(rectangle, new Color(64, 0, 0)));
+		add(new LabelShape(getArea(), new Color(64, 0, 0)));
+	}
+
+	private Rectangle2D.Double area;
+
+	public Rectangle2D.Double getArea()
+	{
+		return area;
 	}
 
 	public int getPanelWidth()

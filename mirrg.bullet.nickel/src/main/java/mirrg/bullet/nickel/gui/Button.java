@@ -11,14 +11,8 @@ import mirrg.bullet.nickel.core.GameNickel;
 public class Button implements IComponent
 {
 
-	public GameNickel game;
-	public Rectangle2D.Double rectangle;
-	public Color color = new Color(128, 0, 0);
-	public Runnable onClick;
-	public Runnable onMouseIn;
-	public boolean isDown = false;
-	public boolean isHover = false;
-	public boolean isEnable = true;
+	private GameNickel game;
+	private Rectangle2D.Double rectangle;
 
 	public Button(GameNickel game, Rectangle2D.Double shape)
 	{
@@ -26,11 +20,23 @@ public class Button implements IComponent
 		this.rectangle = shape;
 	}
 
-	public Button setOnClick(Runnable onClick)
+	private Runnable onMouseUp;
+
+	public Button setOnMouseUp(Runnable onMouseUp)
 	{
-		this.onClick = onClick;
+		this.onMouseUp = onMouseUp;
 		return this;
 	}
+
+	private Runnable onMouseDown;
+
+	public Button setOnMouseDown(Runnable onMouseDown)
+	{
+		this.onMouseDown = onMouseDown;
+		return this;
+	}
+
+	private Runnable onMouseIn;
 
 	public Button setOnMouseIn(Runnable onMouseIn)
 	{
@@ -38,11 +44,23 @@ public class Button implements IComponent
 		return this;
 	}
 
+	private Runnable onMouseOut;
+
+	public Button setOnMouseOut(Runnable onMouseOut)
+	{
+		this.onMouseOut = onMouseOut;
+		return this;
+	}
+
+	private Color color = new Color(128, 0, 0);
+
 	public Button setColor(Color color)
 	{
 		this.color = color;
 		return this;
 	}
+
+	private boolean isEnable = true;
 
 	public Button setEnable(Boolean isEnable)
 	{
@@ -50,31 +68,68 @@ public class Button implements IComponent
 		return this;
 	}
 
+	private boolean isEditable = true;
+
+	public Button setEditable(boolean isEditable)
+	{
+		this.isEditable = isEditable;
+		return this;
+	}
+
+	private boolean isDown = false;
+	private boolean isHover = false;
+
 	@Override
 	public void move()
 	{
-		boolean isHover = rectangle.contains(
-			game.panel.responceApplyStandard.moduleInputStatus.getMouseX(),
-			game.panel.responceApplyStandard.moduleInputStatus.getMouseY()) && isEnable;
+		if (isEnable) {
+			boolean _isHover = rectangle.contains(
+				game.panel.responceApplyStandard.moduleInputStatus.getMouseX(),
+				game.panel.responceApplyStandard.moduleInputStatus.getMouseY());
 
-		if (!this.isHover && isHover) {
-			if (onMouseIn != null) onMouseIn.run();
-		}
-		this.isHover = isHover;
+			if (isHover) {
+				if (!_isHover) {
 
-		if (isDown) {
-			if (game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON1) == -1) {
-				if (isHover) {
-					if (onClick != null) onClick.run();
+					if (onMouseOut != null) onMouseOut.run();
+
+					isHover = false;
 				}
-				isDown = false;
+			} else {
+				if (_isHover) {
+
+					if (onMouseIn != null) onMouseIn.run();
+
+					isHover = true;
+				}
 			}
 		} else {
-			if (game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON1) == 1) {
-				if (isHover) {
-					isDown = true;
+			isHover = false;
+		}
+
+		if (isEditable) {
+			int state = game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON1);
+
+			if (isDown) {
+				if (state == -1) {
+					if (isHover) {
+
+						if (onMouseUp != null) onMouseUp.run();
+
+					}
+					isDown = false;
+				}
+			} else {
+				if (state == 1) {
+					if (isHover) {
+
+						if (onMouseDown != null) onMouseDown.run();
+
+						isDown = true;
+					}
 				}
 			}
+		} else {
+			isDown = false;
 		}
 	}
 

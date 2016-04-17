@@ -19,16 +19,16 @@ public class EntityItemStack extends EntityItemAbstract
 	@Override
 	public void onCought(PhaseBattle phase)
 	{
-		phase.game.inventory.addStack(stack);
+		phase.session.data.getInventory().addStack(stack);
 		phase.addParticle(new ParticleText(x, y,
-			stack.getNameInButtle(),
+			stack.getNameLocalizedInButtle(),
 			20, new Color(255, 128, 128, 64)));
 	}
 
 	@Override
 	public Color getColor()
 	{
-		return Color.red;
+		return stack.getColor();
 	}
 
 }

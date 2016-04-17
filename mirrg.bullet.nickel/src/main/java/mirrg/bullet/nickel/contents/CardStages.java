@@ -8,10 +8,10 @@ import mirrg.bullet.nickel.contents.stages.StagePlainGrass;
 import mirrg.bullet.nickel.contents.stages.StagePlainStone;
 import mirrg.bullet.nickel.contents.stages.StageQuarryCopper;
 import mirrg.bullet.nickel.item.IItem;
-import mirrg.bullet.nickel.stage.ISettingStage;
+import mirrg.bullet.nickel.stage.ICardStage;
 import mirrg.bullet.nickel.stage.IStage;
 
-public enum SettingStages implements ISettingStage
+public enum CardStages implements ICardStage
 {
 	landOpening(StageLandOpening::new, "LandOpening", "始まりの土地", Items.dirt, 10, 0),
 	plainStone(StagePlainStone::new, "PlainStone", "石の平原", Items.stone, 9, 0),
@@ -26,7 +26,7 @@ public enum SettingStages implements ISettingStage
 	public int r;
 	public int c;
 
-	private SettingStages(Supplier<IStage> creator, String name, String label, IItem item, int r, int c)
+	private CardStages(Supplier<IStage> creator, String name, String label, IItem item, int r, int c)
 	{
 		this.creator = creator;
 		this.name = name;
@@ -72,10 +72,10 @@ public enum SettingStages implements ISettingStage
 		return c;
 	}
 
-	public static ISettingStage get(int r, int c)
+	public static ICardStage get(int r, int c)
 	{
-		for (ISettingStage settingStage : values()) {
-			if (settingStage.getR() == r && settingStage.getC() == c) return settingStage;
+		for (ICardStage cardStage : values()) {
+			if (cardStage.getR() == r && cardStage.getC() == c) return cardStage;
 		}
 		return null;
 	}

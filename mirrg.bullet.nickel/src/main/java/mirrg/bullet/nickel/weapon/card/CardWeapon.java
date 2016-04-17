@@ -13,13 +13,15 @@ public class CardWeapon
 	private ArrayList<ICardBattery> cardBatteries = new ArrayList<>();
 	private IItem item;
 	private String nameGrade;
-	private String nameWeaponType;
+	private String nameLocalizedWeaponType;
+	private String nameOreWeaponType;
 
-	public CardWeapon(IItem item, String nameGrade, String nameWeaponType)
+	public CardWeapon(IItem item, String nameGrade, String nameLocalizedWeaponType, String nameOreWeaponType)
 	{
 		this.item = item;
 		this.nameGrade = nameGrade;
-		this.nameWeaponType = nameWeaponType;
+		this.nameLocalizedWeaponType = nameLocalizedWeaponType;
+		this.nameOreWeaponType = nameOreWeaponType;
 	}
 
 	public CardWeapon add(ICardBattery battery)
@@ -28,9 +30,15 @@ public class CardWeapon
 		return this;
 	}
 
-	public String getName()
+	public String getNameLocalized()
 	{
-		return item.getName() + nameGrade + nameWeaponType;
+		return item.getNameLocalized() + nameGrade + nameLocalizedWeaponType;
+	}
+
+	public String getNameOre()
+	{
+		return nameOreWeaponType + nameGrade
+			+ item.getNameOre().substring(0, 1).toUpperCase() + item.getNameOre().substring(1);
 	}
 
 	public String getNameGrade()
@@ -79,6 +87,11 @@ public class CardWeapon
 			weapon.add(cardBattery.createBattery());
 		}
 		return weapon;
+	}
+
+	public double getDamageBomb()
+	{
+		return getDamagePerSecond(true) * 0.25;
 	}
 
 }

@@ -6,11 +6,11 @@ import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.Optional;
 
 import mirrg.bullet.nickel.contents.entities.bullets.BulletBomb;
 import mirrg.bullet.nickel.entity.IPlayer;
 import mirrg.bullet.nickel.phases.PhaseBattle;
-import mirrg.bullet.nickel.weapon.card.CardWeapon;
 import mirrg.bullet.nickel.weapon.instance.IWeapon;
 
 public class EntityPlayer implements IPlayer
@@ -19,22 +19,26 @@ public class EntityPlayer implements IPlayer
 	public double x;
 	public double y;
 	public double r;
-	public CardWeapon cardWeaponLeft;
-	public CardWeapon cardWeaponRight;
-	public IWeapon weaponLeft;
-	public IWeapon weaponRight;
+	public Optional<IWeapon> weaponLeft;
+	public Optional<IWeapon> weaponRight;
+	public int damageBomb;
+
 	public int invincible = 50;
 
-	public EntityPlayer(double x, double y, double r, CardWeapon cardWeaponLeft, CardWeapon cardWeaponRight)
+	public EntityPlayer(
+		double x,
+		double y,
+		double r,
+		Optional<IWeapon> weaponLeft,
+		Optional<IWeapon> weaponRight,
+		int damageBomb)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = r;
-		this.cardWeaponLeft = cardWeaponLeft;
-		this.cardWeaponRight = cardWeaponRight;
-
-		weaponLeft = cardWeaponLeft.createWeapon();
-		weaponRight = cardWeaponRight.createWeapon();
+		this.weaponLeft = weaponLeft;
+		this.weaponRight = weaponRight;
+		this.damageBomb = damageBomb;
 	}
 
 	@Override
@@ -73,14 +77,23 @@ public class EntityPlayer implements IPlayer
 
 		// shot
 		if (phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON1) > 0) {
-			weaponLeft.move(this, phase, true, true);
-			weaponRight.move(this, phase, false, true);
+			weaponLeft.ifPresent(weapon -> weapon.move(this, phase, true, true));
+			weaponRight.ifPresent(weapon -> weapon.move(this, phase, false, true));
 		} else {
-			weaponLeft.move(this, phase, false, true);
+			weaponLeft.ifPresent(weapon -> weapon.move(this, phase, false, true));
 			if (phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON3) > 0) {
-				weaponRight.move(this, phase, true, true);
+				weaponRight.ifPresent(weapon -> weapon.move(this, phase, true, true));
 			} else {
-				weaponRight.move(this, phase, false, true);
+				weaponRight.ifPresent(weapon -> weapon.move(this, phase, false, true));
+			}
+		}
+
+		// bomb
+		if (phase.game.panel.responceApplyStandard.moduleInputStatus.getMouseButtons().getState(MouseEvent.BUTTON2) == 1) {
+			if (phase.life >= 1) {
+				phase.life--;
+				invincible = 50;
+				doBomb(phase);
 			}
 		}
 
@@ -92,8 +105,13 @@ public class EntityPlayer implements IPlayer
 	@Override
 	public void onDie(PhaseBattle phase)
 	{
-		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, (int) (cardWeaponLeft.getDamagePerSecond(true) / 10)));
+		doBomb(phase);
 		phase.invokeLater(phase::die);
+	}
+
+	public void doBomb(PhaseBattle phase)
+	{
+		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, damageBomb));
 	}
 
 	private int ir;
@@ -152,15 +170,27 @@ public class EntityPlayer implements IPlayer
 	}
 
 	@Override
-	public IWeapon getWeaponMain()
+	public Optional<IWeapon> getWeaponMain()
 	{
 		return weaponLeft;
 	}
 
 	@Override
-	public IWeapon getWeaponSub()
+	public Optional<IWeapon> getWeaponSub()
 	{
 		return weaponRight;
+	}
+
+	@Override
+	public int getHP()
+	{
+		return hp;
+	}
+
+	@Override
+	public int getHPMax()
+	{
+		return 100;
 	}
 
 }

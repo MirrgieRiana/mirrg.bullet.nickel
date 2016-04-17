@@ -6,35 +6,30 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-import java.util.HashSet;
 
-import mirrg.bullet.nickel.contents.SettingStages;
-import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponBullets;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+
+import mirrg.bullet.nickel.contents.CardWeapons;
 import mirrg.bullet.nickel.gui.Counter;
-import mirrg.bullet.nickel.item.Inventory;
-import mirrg.bullet.nickel.item.StackWeapon;
 import mirrg.bullet.nickel.phase.IPhase;
-import mirrg.bullet.nickel.phases.PhaseStages;
-import mirrg.bullet.nickel.stage.ISettingStage;
+import mirrg.bullet.nickel.phases.PhaseTitle;
+import mirrg.bullet.nickel.weapon.card.CardWeapon;
 
 public class GameNickel implements IGame
 {
 
 	public PanelNickel panel;
 
-	public Inventory inventory;
-	public HashSet<String> availableStages = new HashSet<>();
-
-	public int scoreMax;
-
 	public Dimension sizePanel;
 	public Dimension sizeGame;
 	public Dimension sizeInventory;
 
 	public IPhase phase;
-
-	public StackWeapon weaponMain;
-	public StackWeapon weaponSub;
 
 	public GameNickel(PanelNickel panel)
 	{
@@ -44,18 +39,9 @@ public class GameNickel implements IGame
 	@Override
 	public void init(int width, int height)
 	{
-
-		scoreMax = 100;
-		inventory = new Inventory();
-		weaponMain = new StackWeapon(SupplierCardWeaponBullets.nickel.get("P", true));
-		inventory.addStack(weaponMain);
-		weaponSub = new StackWeapon(SupplierCardWeaponBullets.calcite.get("P", true));
-		inventory.addStack(weaponSub);
-		availableStages.add(SettingStages.landOpening.name);
-
 		updateLayout(width, height);
 		{
-			IPhase phase = new PhaseStages(this);
+			IPhase phase = new PhaseTitle(this);
 			phase.init();
 			setPhase(phase);
 		}
@@ -120,32 +106,9 @@ public class GameNickel implements IGame
 	{
 		Counter counter = new Counter();
 
-		graphics.setColor(Color.white);
-		graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
-
-		graphics.drawString("HiScore: " + scoreMax,
-			0, counter.value + graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize());
-
 		phase.paintScore(graphics, size, counter);
 		counter.add(graphics.getFont().getSize());
 
-		graphics.drawString("メインショット：",
-			0, counter.value + graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize());
-
-		graphics.drawString("　" + weaponMain.getName(),
-			0, counter.value + graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize());
-
-		graphics.drawString("サブショット：",
-			0, counter.value + graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize());
-
-		graphics.drawString("　" + weaponSub.getName(),
-			0, counter.value + graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize());
-		counter.add(graphics.getFont().getSize());
 	}
 
 	public void drawFPS(Graphics2D graphics, Dimension size)
@@ -162,26 +125,34 @@ public class GameNickel implements IGame
 			0, size.height - graphics.getFont().getSize());
 	}
 
-	public void onClear(ISettingStage settingStage)
+	public static XStream createXStream()
 	{
-		ISettingStage s;
+		XStream xStream = new XStream();
+		xStream.registerConverter(new Converter() {
 
-		s = SettingStages.get(settingStage.getR() - 1, settingStage.getC());
-		if (s != null) markAvailable(s);
+			@SuppressWarnings("rawtypes")
+			@Override
+			public boolean canConvert(Class type)
+			{
+				return type == CardWeapon.class;
+			}
 
-		s = SettingStages.get(settingStage.getR() + 1, settingStage.getC());
-		if (s != null) markAvailable(s);
+			@Override
+			public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context)
+			{
+				writer.setValue(((CardWeapon) source).getNameOre());
+			}
 
-		s = SettingStages.get(settingStage.getR(), settingStage.getC() - 1);
-		if (s != null) markAvailable(s);
+			@Override
+			public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context)
+			{
+				String nameOre = reader.getValue();
+				return CardWeapons.get(nameOre).orElseThrow(() -> new RuntimeException("No such ore: " + nameOre));
+			}
 
-		s = SettingStages.get(settingStage.getR(), settingStage.getC() + 1);
-		if (s != null) markAvailable(s);
-	}
+		});
 
-	public void markAvailable(ISettingStage settingStage)
-	{
-		availableStages.add(settingStage.getName());
+		return xStream;
 	}
 
 }

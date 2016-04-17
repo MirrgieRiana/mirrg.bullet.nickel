@@ -18,15 +18,15 @@ public class BulletBomb implements IBullet, ILiving
 	public double y;
 	public double r;
 	public double rMax;
-	public int attack;
+	public int damageAll;
 
-	public BulletBomb(double x, double y, double rMax, int attack)
+	public BulletBomb(double x, double y, double rMax, int damageAll)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = rMax / 10;
 		this.rMax = rMax;
-		this.attack = attack;
+		this.damageAll = damageAll;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class BulletBomb implements IBullet, ILiving
 	@Override
 	public int getAttack()
 	{
-		return attack;
+		return (int) (damageAll / (rMax / 0.05));
 	}
 
 }

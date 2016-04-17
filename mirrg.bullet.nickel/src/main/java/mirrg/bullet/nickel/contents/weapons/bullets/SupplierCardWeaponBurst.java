@@ -14,7 +14,7 @@ public abstract class SupplierCardWeaponBurst extends SupplierCardWeaponAbstract
 
 	public SupplierCardWeaponBurst(IItem item)
 	{
-		super(item, "バースト");
+		super(item, "バースト", "burst");
 	}
 
 	protected CardBatteryAbstract getBulletBase(boolean isPlayer)

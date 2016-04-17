@@ -129,7 +129,7 @@ public class EnemyBase implements ILiving
 				double theta = 2 * Math.random() * Math.PI;
 				double length = r * (0.5 + Math.random() * 1.5);
 
-				phase.addEntityItem(new EntityItemScore(x, y, length * Math.cos(theta), length * Math.sin(theta), 10));
+				phase.addEntityItem(new EntityItemMoney(x, y, length * Math.cos(theta), length * Math.sin(theta), 10));
 
 				dropped++;
 			}

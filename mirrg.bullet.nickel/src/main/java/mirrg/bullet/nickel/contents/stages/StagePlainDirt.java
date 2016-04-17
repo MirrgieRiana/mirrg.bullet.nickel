@@ -37,7 +37,7 @@ public class StagePlainDirt extends StageAbstract
 	{
 		if (age == A) {
 			addNorm();
-			double dps = 25;
+			double dps = 40;
 			double seconds = 10;
 			phase.addEnemy(new EnemyFairy2(0.5, 0, 0.05, (int) (dps * seconds), 0.003, (int) (30 * seconds))
 				.setBoss(true)
@@ -47,7 +47,7 @@ public class StagePlainDirt extends StageAbstract
 				.addWeapon(new WeaponDelay(130, SupplierCardWeaponBurst.dirt.get("M", false).createWeapon()))
 				.addWeapon(new WeaponDelay(140, SupplierCardWeaponBurst.dirt.get("M", false).createWeapon()))
 				.addWeapon(new WeaponDelay(100, SupplierCardWeaponSpark.dirt.get("L", false).createWeapon()))
-				.addStack(() -> new StackItem(Items.dirt, 1), 0.75, 10)
+				.addStack(() -> new StackItem(Items.dirt, 1), 0.75, 5)
 				.hookOnDie(this::addShootdown));
 		}
 		A += 20;

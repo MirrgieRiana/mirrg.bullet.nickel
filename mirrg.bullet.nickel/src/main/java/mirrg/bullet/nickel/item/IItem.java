@@ -5,7 +5,9 @@ import java.awt.Color;
 public interface IItem
 {
 
-	public String getName();
+	public String getNameLocalized();
+
+	public String getNameOre();
 
 	public Color getColor();
 

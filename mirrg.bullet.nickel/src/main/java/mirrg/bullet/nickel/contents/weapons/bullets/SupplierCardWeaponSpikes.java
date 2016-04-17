@@ -14,7 +14,7 @@ public abstract class SupplierCardWeaponSpikes extends SupplierCardWeaponAbstrac
 
 	public SupplierCardWeaponSpikes(IItem item)
 	{
-		super(item, "スパイク");
+		super(item, "スパイク", "spikes");
 	}
 
 	protected CardBatteryAbstract getBulletBase(boolean isPlayer)

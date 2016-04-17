@@ -34,7 +34,8 @@ public enum Items implements IItem
 	wood("ウッド", Color.decode("#D8814B")),
 	leaf("リーフ", Color.decode("#1A7518")),
 
-	furnace("炉", Color.decode("#682A1E")),
+	money("マネー", Color.decode("#DBC629")),
+	furnace("ファーネス", Color.decode("#682A1E")),
 	fuel("フューエル", Color.decode("#38160B"));
 
 	private final String name;
@@ -47,9 +48,15 @@ public enum Items implements IItem
 	}
 
 	@Override
-	public String getName()
+	public String getNameLocalized()
 	{
 		return name;
+	}
+
+	@Override
+	public String getNameOre()
+	{
+		return name();
 	}
 
 	@Override

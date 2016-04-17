@@ -5,3 +5,4 @@ backup/
 */bin/
 */build/
 */.classpath
+mirrg.bullet.nickel/*.save.xml

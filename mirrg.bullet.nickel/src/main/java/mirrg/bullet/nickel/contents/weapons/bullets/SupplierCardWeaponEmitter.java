@@ -14,7 +14,7 @@ public abstract class SupplierCardWeaponEmitter extends SupplierCardWeaponAbstra
 
 	public SupplierCardWeaponEmitter(IItem item)
 	{
-		super(item, "エミッタ");
+		super(item, "エミッタ", "emitter");
 	}
 
 	protected CardBatteryAbstract getBulletBase(boolean isPlayer)
@@ -36,14 +36,23 @@ public abstract class SupplierCardWeaponEmitter extends SupplierCardWeaponAbstra
 	}
 
 	public static SupplierCardWeaponEmitter stone = new SupplierCardWeaponEmitter(Items.stone) {
-		private CardBatteryAbstract a(CardBatteryAbstract b, double span, double speed, double damage, double ways, double anglePerWay)
+		private CardBatteryAbstract createCardBattery(
+			CardBatteryAbstract base,
+			double span,
+			double speed,
+			double damage,
+			double bullets,
+			double ways,
+			double anglePerTime)
 		{
-			return b(b)
+			return b(base)
 				.map(SPAN, a -> a * span)
 				.map(SPEED, a -> a * speed)
 				.map(DAMAGE, a -> a * damage)
+				.set(BULLETS, bullets)
 				.set(WAYS, ways)
-				.set(ANGLE_PER_WAY, anglePerWay);
+				.set(ANGLE_PER_WAY, 360.0 / ways)
+				.map(ANGLE_PER_TIME, a -> a * anglePerTime);
 		}
 
 		@Override
@@ -52,14 +61,48 @@ public abstract class SupplierCardWeaponEmitter extends SupplierCardWeaponAbstra
 			ArrayList<CardWeapon> cards = new ArrayList<CardWeapon>();
 			CardBatteryAbstract base = getBulletBase(isPlayer);
 
-			cards.add(w("L").add(b(base).map(SPAN, a -> a * 1.0).map(SPEED, a -> a * 1.0).map(DAMAGE, a -> a * 1.0).set(BULLETS, 3).set(WAYS, 12).set(ANGLE_PER_WAY, 360.0 / 12).map(ANGLE_PER_TIME,
-				a -> a * 1.0)));
-			cards.add(w("M").add(b(base).map(SPAN, a -> a * 0.8).map(SPEED, a -> a * 1.2).map(DAMAGE, a -> a * 2.0).set(BULLETS, 4).set(WAYS, 15).set(ANGLE_PER_WAY, 360.0 / 15).map(ANGLE_PER_TIME,
-				a -> a * 0.8)));
-			cards.add(w("H").add(b(base).map(SPAN, a -> a * 0.6).map(SPEED, a -> a * 1.5).map(DAMAGE, a -> a * 5.0).set(BULLETS, 5).set(WAYS, 20).set(ANGLE_PER_WAY, 360.0 / 20).map(ANGLE_PER_TIME,
-				a -> a * 0.6)));
-			cards.add(w("V").add(b(base).map(SPAN, a -> a * 0.5).map(SPEED, a -> a * 2.0).map(DAMAGE, a -> a * 10.0).set(BULLETS, 7).set(WAYS, 30).set(ANGLE_PER_WAY, 360.0 / 30).map(ANGLE_PER_TIME,
-				a -> a * 0.5)));
+			cards.add(w("L").add(createCardBattery(base, 1.0, 1.0, 1.0, 3, 10, 1.0)));
+			cards.add(w("M").add(createCardBattery(base, 0.8, 1.2, 2.0, 4, 15, 0.8)));
+			cards.add(w("H").add(createCardBattery(base, 0.6, 1.5, 5.0, 5, 20, 0.6)));
+			cards.add(w("V").add(createCardBattery(base, 0.5, 2.0, 10.0, 7, 30, 0.5)));
+
+			return cards;
+		}
+	};
+
+	//TODO
+	public static SupplierCardWeaponEmitter copper = new SupplierCardWeaponEmitter(Items.copper) {
+		private CardBatteryAbstract createCardBattery(
+			CardBatteryAbstract base,
+			double span,
+			double speed,
+			double damage,
+			double ways,
+			double anglePerTime)
+		{
+			return b(base)
+				.set(SIZE, 0.02)
+				.map(SPAN, a -> a * 0.8 * span)
+				.map(SPEED, a -> a * 0.75 * speed)
+				.map(DAMAGE, a -> a * 3 * damage)
+				.set(BULLETS, 1)
+				.set(WAYS, ways)
+				.set(ANGLE_PER_WAY, 360.0 / ways)
+				.map(ANGLE_PER_TIME, a -> a * anglePerTime)
+				.set(NOIZ_ANGLE, 5)
+				.set(NOIZ_SPEED_RATE, 0.05);
+		}
+
+		@Override
+		public ArrayList<CardWeapon> createCardWeapons(Boolean isPlayer)
+		{
+			ArrayList<CardWeapon> cards = new ArrayList<CardWeapon>();
+			CardBatteryAbstract base = getBulletBase(isPlayer);
+
+			cards.add(w("L").add(createCardBattery(base, 1.0, 1.0, 1.0, 10, 1.0)));
+			cards.add(w("M").add(createCardBattery(base, 0.8, 1.2, 2.0, 15, 0.8)));
+			cards.add(w("H").add(createCardBattery(base, 0.6, 1.5, 5.0, 20, 0.6)));
+			cards.add(w("V").add(createCardBattery(base, 0.5, 2.0, 10.0, 25, 0.5)));
 
 			return cards;
 		}

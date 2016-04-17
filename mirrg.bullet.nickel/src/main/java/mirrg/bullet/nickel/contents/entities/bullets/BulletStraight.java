@@ -53,7 +53,7 @@ public class BulletStraight implements IBullet
 	public void render(PhaseBattle phase, Graphics2D graphics)
 	{
 		graphics.setColor(color);
-		graphics.fill(getShape(0));
+		graphics.fill(getShape(r * 0.2));
 	}
 
 	@Override

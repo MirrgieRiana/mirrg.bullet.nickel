@@ -6,11 +6,13 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.sun.glass.events.KeyEvent;
 
 import mirrg.bullet.nickel.contents.entities.EntityPlayer;
 import mirrg.bullet.nickel.core.GameNickel;
+import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.entity.IBullet;
 import mirrg.bullet.nickel.entity.IEntity;
 import mirrg.bullet.nickel.entity.IEntityItem;
@@ -18,8 +20,9 @@ import mirrg.bullet.nickel.entity.ILiving;
 import mirrg.bullet.nickel.entity.IParticle;
 import mirrg.bullet.nickel.entity.IPlayer;
 import mirrg.bullet.nickel.gui.Counter;
+import mirrg.bullet.nickel.item.StackWeapon;
 import mirrg.bullet.nickel.phase.IPhase;
-import mirrg.bullet.nickel.stage.ISettingStage;
+import mirrg.bullet.nickel.stage.ICardStage;
 import mirrg.bullet.nickel.stage.IStage;
 import mirrg.util.hydrogen.HString;
 
@@ -27,6 +30,7 @@ public class PhaseBattle implements IPhase
 {
 
 	public GameNickel game;
+	public SessionNickel session;
 
 	public ArrayList<ILiving> players = new ArrayList<>();
 	public ArrayList<ILiving> enemies = new ArrayList<>();
@@ -39,13 +43,14 @@ public class PhaseBattle implements IPhase
 	private int score = 0;
 	public int life;
 	public int ending = 0;
-	public ISettingStage settingStage;
+	public ICardStage cardStage;
 	public IStage stage;
 
-	public PhaseBattle(GameNickel game, ISettingStage settingStage)
+	public PhaseBattle(GameNickel game, SessionNickel session, ICardStage cardStage)
 	{
 		this.game = game;
-		this.settingStage = settingStage;
+		this.session = session;
+		this.cardStage = cardStage;
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class PhaseBattle implements IPhase
 	{
 		respawn();
 
-		stage = settingStage.createStage();
+		stage = cardStage.createStage();
 		stage.init(this);
 		life = 2;
 	}
@@ -63,7 +68,7 @@ public class PhaseBattle implements IPhase
 	{
 		if (game.panel.responceApplyStandard.moduleInputStatus.getKeyBoard().getState(KeyEvent.VK_ESCAPE) == 1) {
 
-			IPhase phase = new PhaseMenu(game, this);
+			IPhase phase = new PhasePause(game, session, this);
 			phase.init();
 			game.setPhase(phase);
 
@@ -96,9 +101,9 @@ public class PhaseBattle implements IPhase
 				}
 
 				if (ending == 100) {
-					game.onClear(settingStage);
+					session.onClear(cardStage);
 
-					IPhase phase = new PhaseStages(game);
+					IPhase phase = new PhaseStages(game, session);
 					phase.init();
 					game.setPhase(phase);
 				}
@@ -109,7 +114,7 @@ public class PhaseBattle implements IPhase
 				ending++;
 
 				if (ending == 100) {
-					IPhase phase = new PhaseStages(game);
+					IPhase phase = new PhaseStages(game, session);
 					phase.init();
 					game.setPhase(phase);
 				}
@@ -120,7 +125,7 @@ public class PhaseBattle implements IPhase
 				ending++;
 
 				if (ending == 100) {
-					IPhase phase = new PhaseStages(game);
+					IPhase phase = new PhaseStages(game, session);
 					phase.init();
 					game.setPhase(phase);
 				}
@@ -238,7 +243,12 @@ public class PhaseBattle implements IPhase
 
 	public void respawn()
 	{
-		player = new EntityPlayer(0.5, 0.75, 0.005, game.weaponMain.item, game.weaponSub.item);
+		Optional<StackWeapon> weaponLeft = session.data.getWeaponLeft();
+		Optional<StackWeapon> weaponRight = session.data.getWeaponRight();
+		player = new EntityPlayer(0.5, 0.75, 0.005,
+			weaponLeft.map(weapon -> weapon.item.createWeapon()),
+			weaponRight.map(weapon -> weapon.item.createWeapon()),
+			weaponRight.map(weapon -> (int) weapon.item.getDamageBomb()).orElse(0));
 		addPlayer(player);
 	}
 
@@ -247,12 +257,6 @@ public class PhaseBattle implements IPhase
 		for (IEntityItem entityItem : entityItems) {
 			entityItem.doAutoHarvest();
 		}
-	}
-
-	public void addScore(int addition)
-	{
-		score += addition;
-		if (score > game.scoreMax) game.scoreMax = score;
 	}
 
 	@Override
@@ -339,6 +343,30 @@ public class PhaseBattle implements IPhase
 	@Override
 	public void paintScore(Graphics2D graphics, Dimension size, Counter counter)
 	{
+		{
+			graphics.setColor(Color.white);
+			graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
+
+			graphics.drawString("メインショット：",
+				0, counter.value + graphics.getFont().getSize());
+			counter.add(graphics.getFont().getSize());
+
+			graphics.drawString("　" + session.data.getWeaponLeft().map(stack -> stack.item.getNameLocalized()).orElse(""),
+				0, counter.value + graphics.getFont().getSize());
+			counter.add(graphics.getFont().getSize());
+
+			graphics.drawString("サブショット：",
+				0, counter.value + graphics.getFont().getSize());
+			counter.add(graphics.getFont().getSize());
+
+			graphics.drawString("　" + session.data.getWeaponRight().map(stack -> stack.item.getNameLocalized()).orElse(""),
+				0, counter.value + graphics.getFont().getSize());
+			counter.add(graphics.getFont().getSize());
+		}
+		counter.add(graphics.getFont().getSize());
+
+		//
+
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
 
@@ -350,7 +378,11 @@ public class PhaseBattle implements IPhase
 			0, counter.value + graphics.getFont().getSize());
 		counter.add(graphics.getFont().getSize());
 
-		graphics.drawString("残機: " + HString.rept("★", life),
+		graphics.drawString("ボム（残機）: " + HString.rept("★", life),
+			0, counter.value + graphics.getFont().getSize());
+		counter.add(graphics.getFont().getSize());
+
+		graphics.drawString("HP: " + player.getHP() + " / " + player.getHPMax(),
 			0, counter.value + graphics.getFont().getSize());
 		counter.add(graphics.getFont().getSize());
 	}

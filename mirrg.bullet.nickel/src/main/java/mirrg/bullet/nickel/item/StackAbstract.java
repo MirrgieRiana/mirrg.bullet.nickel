@@ -15,21 +15,15 @@ public abstract class StackAbstract<T> implements IStack
 	}
 
 	@Override
-	public String getNameInButtle()
+	public String getNameLocalizedInButtle()
 	{
-		return amount == 1 ? getName() : getName() + "×" + amount;
+		return amount == 1 ? getNameLocalized() : getNameLocalized() + "×" + amount;
 	}
 
 	@Override
 	public int getAmount()
 	{
 		return amount;
-	}
-
-	@Override
-	public String getOreName()
-	{
-		return getName();
 	}
 
 	@Override

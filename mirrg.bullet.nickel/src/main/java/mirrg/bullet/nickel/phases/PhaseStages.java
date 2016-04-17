@@ -4,20 +4,21 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 
-import mirrg.bullet.nickel.contents.SettingStages;
+import mirrg.bullet.nickel.contents.CardStages;
 import mirrg.bullet.nickel.core.GameNickel;
+import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.gui.Button;
 import mirrg.bullet.nickel.gui.Label;
 import mirrg.bullet.nickel.gui.PanelButtons;
 import mirrg.bullet.nickel.phase.IPhase;
-import mirrg.bullet.nickel.stage.ISettingStage;
+import mirrg.bullet.nickel.stage.ICardStage;
 
-public class PhaseStages extends PhaseGUIBase
+public class PhaseStages extends PhaseHomeBase
 {
 
-	public PhaseStages(GameNickel game)
+	public PhaseStages(GameNickel game, SessionNickel session)
 	{
-		super(game);
+		super(game, session);
 	}
 
 	@Override
@@ -31,23 +32,23 @@ public class PhaseStages extends PhaseGUIBase
 
 		Label label = new Label(new Point2D.Double(
 			game.sizeGame.width / 2,
-			game.sizeGame.height / 2 - panelButtons.rectangle.height / 2 - 30),
+			game.sizeGame.height / 2 - panelButtons.getArea().height / 2 - 30),
 			"", new Font(Font.SANS_SERIF, Font.PLAIN, 24));
 		components.add(label);
 
-		for (ISettingStage settingStage : SettingStages.values()) {
-			Button button = panelButtons.putButton(game, settingStage.getR(), settingStage.getC());
-			if (game.availableStages.contains(settingStage.getName())) {
+		for (ICardStage cardStage : CardStages.values()) {
+			Button button = panelButtons.putButton(game, cardStage.getR(), cardStage.getC());
+			if (session.data.isAvailable(cardStage)) {
 				button
-					.setOnClick(() -> {
-						IPhase phase = new PhaseBattle(game, settingStage);
+					.setOnMouseUp(() -> {
+						IPhase phase = new PhaseBattle(game, session, cardStage);
 						phase.init();
 						game.setPhase(phase);
 					})
 					.setOnMouseIn(() -> {
-						label.text = settingStage.getLabel();
+						label.setText(cardStage.getLabel());
 					})
-					.setColor(settingStage.getItem().getColor());
+					.setColor(cardStage.getItem().getColor());
 			} else {
 				button
 					.setEnable(false)

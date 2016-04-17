@@ -3,8 +3,10 @@ package mirrg.bullet.nickel.phases;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Optional;
 
 import mirrg.bullet.nickel.core.GameNickel;
+import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.gui.Button;
 import mirrg.bullet.nickel.gui.Label;
 import mirrg.bullet.nickel.item.IStack;
@@ -13,21 +15,21 @@ import mirrg.bullet.nickel.item.StackWeapon;
 public class PhaseInventory extends PhaseListAbstract
 {
 
-	public PhaseInventory(GameNickel game)
+	public PhaseInventory(GameNickel game, SessionNickel session)
 	{
-		super(game);
+		super(game, session);
 	}
 
 	@Override
 	protected int getItemCount()
 	{
-		return game.inventory.stacks.size();
+		return session.data.getInventory().size();
 	}
 
 	@Override
 	protected void putRecord(GameNickel game, Rectangle2D.Double area, int row)
 	{
-		IStack stack = game.inventory.stacks.get(row + lineCount * page);
+		IStack stack = session.data.getInventory().get(row + lineCount * page);
 
 		if (stack instanceof StackWeapon) {
 
@@ -36,11 +38,15 @@ public class PhaseInventory extends PhaseListAbstract
 				Label e = new Label(new Point2D.Double(area2.getCenterX(), area2.getCenterY()),
 					"", new Font(Font.SANS_SERIF, Font.PLAIN, 24));
 				hookReflesh(() -> {
-					e.text = game.weaponMain.equals(stack) ? "★" : "←";
+					e.setText(session.data.getWeaponLeft().equals(Optional.of(stack)) ? "★" : "←");
 				});
 				components.add(new Button(game, area2)
-					.setOnClick(() -> {
-						game.weaponMain = (StackWeapon) stack;
+					.setOnMouseUp(() -> {
+						if (session.data.getWeaponLeft().equals(Optional.of(stack))) {
+							session.data.setWeaponLeft(Optional.empty());
+						} else {
+							session.data.setWeaponLeft(Optional.of((StackWeapon) stack));
+						}
 						fireReflesh();
 					}));
 				components.add(e);
@@ -51,11 +57,15 @@ public class PhaseInventory extends PhaseListAbstract
 				Label e = new Label(new Point2D.Double(area2.getCenterX(), area2.getCenterY()),
 					"", new Font(Font.SANS_SERIF, Font.PLAIN, 24));
 				hookReflesh(() -> {
-					e.text = game.weaponSub.equals(stack) ? "★" : "→";
+					e.setText(session.data.getWeaponRight().equals(Optional.of(stack)) ? "★" : "→");
 				});
 				components.add(new Button(game, area2)
-					.setOnClick(() -> {
-						game.weaponSub = (StackWeapon) stack;
+					.setOnMouseUp(() -> {
+						if (session.data.getWeaponRight().equals(Optional.of(stack))) {
+							session.data.setWeaponRight(Optional.empty());
+						} else {
+							session.data.setWeaponRight(Optional.of((StackWeapon) stack));
+						}
 						fireReflesh();
 					}));
 				components.add(e);
@@ -68,12 +78,13 @@ public class PhaseInventory extends PhaseListAbstract
 			components.add(new Button(game, area2)
 				.setOnMouseIn(() -> {
 					messages.clear();
-					messages.add(stack.getName() + "：");
+					messages.add(stack.getNameLocalized() + "：");
 					stack.getMessages(messages);
-				}));
+				})
+				.setEditable(false));
 
 			components.add(new Label(new Point2D.Double(area.x + 70, area.y + 5 + 12 + (25 + 5) * row),
-				stack.getName(),
+				stack.getNameLocalized(),
 				new Font(Font.SANS_SERIF, Font.PLAIN, 24), Label.MIDDLE, Label.LEFT)
 					.setColor(stack.getColor().brighter()));
 			components.add(new Label(new Point2D.Double(area.x + area.width - 10, area.y + 5 + 12 + (25 + 5) * row),

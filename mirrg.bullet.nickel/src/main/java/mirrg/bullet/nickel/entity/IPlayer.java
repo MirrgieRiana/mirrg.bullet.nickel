@@ -1,12 +1,18 @@
 package mirrg.bullet.nickel.entity;
 
+import java.util.Optional;
+
 import mirrg.bullet.nickel.weapon.instance.IWeapon;
 
 public interface IPlayer extends ILiving
 {
 
-	public IWeapon getWeaponMain();
+	public Optional<IWeapon> getWeaponMain();
 
-	public IWeapon getWeaponSub();
+	public Optional<IWeapon> getWeaponSub();
+
+	public int getHP();
+
+	public int getHPMax();
 
 }

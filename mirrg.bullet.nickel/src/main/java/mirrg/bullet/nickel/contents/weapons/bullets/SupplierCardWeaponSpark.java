@@ -14,7 +14,7 @@ public abstract class SupplierCardWeaponSpark extends SupplierCardWeaponAbstract
 
 	public SupplierCardWeaponSpark(IItem item)
 	{
-		super(item, "スパーク");
+		super(item, "スパーク", "spark");
 	}
 
 	protected CardBatteryAbstract getBulletBase(boolean isPlayer)
@@ -44,6 +44,40 @@ public abstract class SupplierCardWeaponSpark extends SupplierCardWeaponAbstract
 			cards.add(w("M").add(b(base).map(SPAN, a -> a * 0.8).map(SPEED, a -> a * 1.2).map(DAMAGE, a -> a * 2.0).set(WAYS, 5)));
 			cards.add(w("H").add(b(base).map(SPAN, a -> a * 0.6).map(SPEED, a -> a * 1.5).map(DAMAGE, a -> a * 5.0).set(WAYS, 11)));
 			cards.add(w("V").add(b(base).map(SPAN, a -> a * 0.5).map(SPEED, a -> a * 2.0).map(DAMAGE, a -> a * 10.0).set(WAYS, 15)));
+
+			return cards;
+		}
+	};
+
+	public static SupplierCardWeaponSpark grass = new SupplierCardWeaponSpark(Items.grass) {
+		private CardBatteryAbstract createCardBattery(
+			boolean isPlayer,
+			double span,
+			double speed,
+			double damage,
+			double bullets,
+			double anglePerTime)
+		{
+			return getBulletBase(isPlayer)
+				.map(SPAN, a -> a * 1 * span)
+				.map(SPEED, a -> a * (isPlayer ? 1 : 3) * speed)
+				.map(DAMAGE, a -> a * 0.2 * damage)
+				.set(WAYS, 1)
+				.set(BULLETS, bullets)
+				.set(DELAY_PER_BULLET, anglePerTime)
+				.set(NOIZ_SPEED_RATE, 0)
+				.set(NOIZ_ANGLE, 180);
+		}
+
+		@Override
+		public ArrayList<CardWeapon> createCardWeapons(Boolean isPlayer)
+		{
+			ArrayList<CardWeapon> cards = new ArrayList<CardWeapon>();
+
+			cards.add(w("L").add(createCardBattery(isPlayer, 1.0, 1.0, 1.0, 15, 0.75)));
+			cards.add(w("M").add(createCardBattery(isPlayer, 0.7, 1.2, 4.0, 20, 0.65)));
+			cards.add(w("H").add(createCardBattery(isPlayer, 0.4, 1.5, 15.0, 25, 0.55)));
+			cards.add(w("V").add(createCardBattery(isPlayer, 0.2, 1.8, 50.0, 30, 0.45)));
 
 			return cards;
 		}

@@ -2,7 +2,7 @@ package mirrg.bullet.nickel.stage;
 
 import mirrg.bullet.nickel.item.IItem;
 
-public interface ISettingStage
+public interface ICardStage
 {
 
 	public String getName();

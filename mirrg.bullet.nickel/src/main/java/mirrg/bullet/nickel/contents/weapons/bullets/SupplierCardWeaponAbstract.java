@@ -13,14 +13,16 @@ public abstract class SupplierCardWeaponAbstract
 {
 
 	protected IItem item;
-	private String nameWeapon;
+	private String nameWeaponLocalized;
+	private String nameWeaponOre;
 	private Hashtable<String, CardWeapon> cardWeaponsEnemy = new Hashtable<>();
 	private Hashtable<String, CardWeapon> cardWeaponsPlayer = new Hashtable<>();
 
-	public SupplierCardWeaponAbstract(IItem item, String nameWeapon)
+	public SupplierCardWeaponAbstract(IItem item, String nameWeaponLocalized, String nameWeaponOre)
 	{
 		this.item = item;
-		this.nameWeapon = nameWeapon;
+		this.nameWeaponLocalized = nameWeaponLocalized;
+		this.nameWeaponOre = nameWeaponOre;
 
 		init();
 	}
@@ -51,6 +53,13 @@ public abstract class SupplierCardWeaponAbstract
 		throw new IllegalArgumentException("Undefined Grade Name: " + nameGrade);
 	}
 
+	public Hashtable<String, CardWeapon> getCardWeapons(Boolean isPlayer)
+	{
+		init();
+
+		return isPlayer ? cardWeaponsPlayer : cardWeaponsEnemy;
+	}
+
 	//
 
 	protected Color paler(Color color)
@@ -68,7 +77,7 @@ public abstract class SupplierCardWeaponAbstract
 
 	protected CardWeapon w(String nameGrade)
 	{
-		return new CardWeapon(item, nameGrade, nameWeapon);
+		return new CardWeapon(item, nameGrade, nameWeaponLocalized, nameWeaponOre);
 	}
 
 	protected CardBatteryBullets b(CardBatteryAbstract... cardBatteries)

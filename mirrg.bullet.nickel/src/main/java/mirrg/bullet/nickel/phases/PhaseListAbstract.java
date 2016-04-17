@@ -9,21 +9,22 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import mirrg.bullet.nickel.core.GameNickel;
+import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.gui.Button;
 import mirrg.bullet.nickel.gui.Counter;
 import mirrg.bullet.nickel.gui.Label;
 import mirrg.bullet.nickel.gui.LabelShape;
 
-public abstract class PhaseListAbstract extends PhaseGUIBase
+public abstract class PhaseListAbstract extends PhaseHomeBase
 {
 
 	protected int page = 0;
 	protected int lineCount = 20;
 	protected Rectangle2D.Double area;
 
-	public PhaseListAbstract(GameNickel game)
+	public PhaseListAbstract(GameNickel game, SessionNickel session)
 	{
-		super(game);
+		super(game, session);
 	}
 
 	protected abstract int getItemCount();
@@ -49,7 +50,7 @@ public abstract class PhaseListAbstract extends PhaseGUIBase
 			}
 
 			components.add(new Button(game, new Rectangle2D.Double(area.x + 5, area.getMaxY() + 5, 25, 25))
-				.setOnClick(() -> {
+				.setOnMouseUp(() -> {
 					hookInvokeLater(() -> {
 						if (page > 0) {
 							page--;
@@ -61,7 +62,7 @@ public abstract class PhaseListAbstract extends PhaseGUIBase
 				"←", new Font(Font.SANS_SERIF, Font.PLAIN, 24)));
 
 			components.add(new Button(game, new Rectangle2D.Double(area.x + 35, area.getMaxY() + 5, 25, 25))
-				.setOnClick(() -> {
+				.setOnMouseUp(() -> {
 					hookInvokeLater(() -> {
 						if (page < pageMax) {
 							page++;

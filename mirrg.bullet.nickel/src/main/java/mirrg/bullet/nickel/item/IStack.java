@@ -6,15 +6,15 @@ import java.util.ArrayList;
 public interface IStack
 {
 
-	public String getName();
+	public String getNameLocalized();
 
-	public String getNameInButtle();
+	public String getNameLocalizedInButtle();
+
+	public String getNameOre();
 
 	public int getAmount();
 
 	public void getMessages(ArrayList<String> messages);
-
-	public String getOreName();
 
 	public Color getColor();
 

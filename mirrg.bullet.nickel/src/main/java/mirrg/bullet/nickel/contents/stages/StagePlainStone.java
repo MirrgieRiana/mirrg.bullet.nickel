@@ -45,14 +45,13 @@ public class StagePlainStone extends StageAbstract
 	{
 		if (age == A) {
 			addNorm();
-			double dps = 25;
+			double dps = 40;
 			double seconds = 10;
 			phase.addEnemy(new EnemyFairy2(0.5, 0, 0.05, (int) (dps * seconds), 0.003, (int) (30 * seconds))
 				.setBoss(true)
 				.addWeapon(new WeaponDelay(100, SupplierCardWeaponBullets.stone.get("M", false).createWeapon()))
 				.addWeapon(new WeaponDelay(100, SupplierCardWeaponEmitter.stone.get("L", false).createWeapon()))
 				.addStack(() -> new StackItem(Items.stone, 1), 0.75, 5)
-				.addStack(() -> new StackItem(Items.dirt, 1), 0.75, 5)
 				.hookOnDie(this::addShootdown));
 		}
 		A += 20;
