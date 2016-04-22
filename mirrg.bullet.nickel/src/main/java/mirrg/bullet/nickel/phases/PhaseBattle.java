@@ -248,7 +248,8 @@ public class PhaseBattle implements IPhase
 		player = new EntityPlayer(0.5, 0.75, 0.005,
 			weaponLeft.map(weapon -> weapon.item.createWeapon()),
 			weaponRight.map(weapon -> weapon.item.createWeapon()),
-			weaponRight.map(weapon -> (int) weapon.item.getDamageBomb()).orElse(0));
+			weaponRight.map(weapon -> (int) weapon.item.getDamageBomb()).orElse(0),
+			weaponRight.map(weapon -> weapon.item.getColor()).orElse(Color.white));
 		addPlayer(player);
 	}
 

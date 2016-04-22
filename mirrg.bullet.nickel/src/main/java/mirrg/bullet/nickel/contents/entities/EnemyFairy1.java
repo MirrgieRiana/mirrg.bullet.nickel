@@ -14,12 +14,9 @@ import mirrg.util.hydrogen.HColor;
 public class EnemyFairy1 extends EnemyBase
 {
 
-	private Color color;
-
 	public EnemyFairy1(double x, double y, double xx, double yy, int hp, Color color)
 	{
-		super(x, y, xx, yy, 0.025, hp, 1);
-		this.color = color;
+		super(x, y, xx, yy, 0.025, hp, 1, color);
 	}
 
 	private int ir = 0;

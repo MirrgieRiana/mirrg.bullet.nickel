@@ -19,14 +19,16 @@ public class BulletBomb implements IBullet, ILiving
 	public double r;
 	public double rMax;
 	public int damageAll;
+	public Color color;
 
-	public BulletBomb(double x, double y, double rMax, int damageAll)
+	public BulletBomb(double x, double y, double rMax, int damageAll, Color color)
 	{
 		this.x = x;
 		this.y = y;
 		this.r = rMax / 10;
 		this.rMax = rMax;
 		this.damageAll = damageAll;
+		this.color = color;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class BulletBomb implements IBullet, ILiving
 	public void render(PhaseBattle phase, Graphics2D graphics)
 	{
 		{
-			graphics.setColor(Color.white);
+			graphics.setColor(color);
 			Stroke stroke = graphics.getStroke();
 			graphics.setStroke(new BasicStroke(0.007f));
 

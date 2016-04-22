@@ -51,6 +51,11 @@ public class CardWeapon
 		return item.getColor();
 	}
 
+	public IItem getItem()
+	{
+		return item;
+	}
+
 	public int getTier()
 	{
 		double dps = Math.max(getDamagePerSecond(true) * 0.24, getDamagePerSecond(false)) + 1;

@@ -5,8 +5,11 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import com.thoughtworks.xstream.XStream;
+
 import mirrg.bullet.nickel.contents.CardStages;
 import mirrg.bullet.nickel.contents.Items;
+import mirrg.bullet.nickel.core.DataNickel;
 import mirrg.bullet.nickel.core.GameNickel;
 import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.gui.Button;
@@ -37,6 +40,10 @@ public class PhaseDebug extends PhaseListAbstract
 		}));
 		commands.add(new Tuple<>("キャッシュ破棄", () -> {
 			counter++;
+		}));
+		commands.add(new Tuple<>("リロード（直列化即復元）", () -> {
+			XStream xStream = GameNickel.createXStream();
+			session.data = (DataNickel) xStream.fromXML(xStream.toXML(session.data));
 		}));
 	}
 

@@ -15,16 +15,23 @@ public abstract class SupplierCardWeaponAbstract
 	protected IItem item;
 	private String nameWeaponLocalized;
 	private String nameWeaponOre;
+	private int cost;
 	private Hashtable<String, CardWeapon> cardWeaponsEnemy = new Hashtable<>();
 	private Hashtable<String, CardWeapon> cardWeaponsPlayer = new Hashtable<>();
 
-	public SupplierCardWeaponAbstract(IItem item, String nameWeaponLocalized, String nameWeaponOre)
+	public SupplierCardWeaponAbstract(IItem item, String nameWeaponLocalized, String nameWeaponOre, int cost)
 	{
 		this.item = item;
 		this.nameWeaponLocalized = nameWeaponLocalized;
 		this.nameWeaponOre = nameWeaponOre;
+		this.cost = cost;
 
 		init();
+	}
+
+	public IItem getItem()
+	{
+		return item;
 	}
 
 	private int counter = -1;
@@ -60,6 +67,11 @@ public abstract class SupplierCardWeaponAbstract
 		return isPlayer ? cardWeaponsPlayer : cardWeaponsEnemy;
 	}
 
+	public int getCost()
+	{
+		return cost;
+	}
+
 	//
 
 	protected Color paler(Color color)
@@ -68,7 +80,7 @@ public abstract class SupplierCardWeaponAbstract
 			color.getRed(),
 			color.getGreen(),
 			color.getBlue(),
-			color.getAlpha() / 2);
+			color.getAlpha() / 4);
 	}
 
 	protected abstract CardBatteryAbstract getBulletBase(boolean isPlayer);

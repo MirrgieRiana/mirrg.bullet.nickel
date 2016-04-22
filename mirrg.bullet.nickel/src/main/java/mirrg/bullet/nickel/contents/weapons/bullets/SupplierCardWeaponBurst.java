@@ -14,7 +14,7 @@ public abstract class SupplierCardWeaponBurst extends SupplierCardWeaponAbstract
 
 	public SupplierCardWeaponBurst(IItem item)
 	{
-		super(item, "バースト", "burst");
+		super(item, "バースト", "burst", 3);
 	}
 
 	protected CardBatteryAbstract getBulletBase(boolean isPlayer)
@@ -36,16 +36,63 @@ public abstract class SupplierCardWeaponBurst extends SupplierCardWeaponAbstract
 	}
 
 	public static SupplierCardWeaponBurst dirt = new SupplierCardWeaponBurst(Items.dirt) {
+		private CardBatteryAbstract createCardBattery(
+			boolean isPlayer,
+			double speed,
+			double damage,
+			double ways,
+			double noizSpeedRate,
+			double noizAngle)
+		{
+			return getBulletBase(isPlayer)
+				.map(SPEED, a -> a * 0.5 * speed)
+				.map(DAMAGE, a -> a / 3 * damage)
+				.map(WAYS, a -> a * 2 * ways)
+				.map(NOIZ_SPEED_RATE, a -> a * noizSpeedRate)
+				.map(NOIZ_ANGLE, a -> a * noizAngle);
+		}
+
 		@Override
 		public ArrayList<CardWeapon> createCardWeapons(Boolean isPlayer)
 		{
 			ArrayList<CardWeapon> cards = new ArrayList<CardWeapon>();
-			CardBatteryAbstract b = getBulletBase(isPlayer).map(SIZE, a -> a / 2).map(DAMAGE, a -> a / 3).map(WAYS, a -> a * 2);
 
-			cards.add(w("L").add(b(b).map(SPEED, a -> a * 1.0).map(DAMAGE, a -> a * 1.0).map(WAYS, a -> a * 1.0).map(NOIZ_SPEED_RATE, a -> a * 1.0).map(NOIZ_ANGLE, a -> a * 1.0)));
-			cards.add(w("M").add(b(b).map(SPEED, a -> a * 1.1).map(DAMAGE, a -> a * 2.2).map(WAYS, a -> a * 1.5).map(NOIZ_SPEED_RATE, a -> a * 1.5).map(NOIZ_ANGLE, a -> a * 1.5)));
-			cards.add(w("H").add(b(b).map(SPEED, a -> a * 1.3).map(DAMAGE, a -> a * 5.0).map(WAYS, a -> a * 2.0).map(NOIZ_SPEED_RATE, a -> a * 2.0).map(NOIZ_ANGLE, a -> a * 2.0)));
-			cards.add(w("V").add(b(b).map(SPEED, a -> a * 1.6).map(DAMAGE, a -> a * 12.0).map(WAYS, a -> a * 4.0).map(NOIZ_SPEED_RATE, a -> a * 3.0).map(NOIZ_ANGLE, a -> a * 3.0)));
+			cards.add(w("L").add(createCardBattery(isPlayer, 1.0, 1.0, 1.0, 1.0, 1.0)));
+			cards.add(w("M").add(createCardBattery(isPlayer, 1.1, 2.2, 1.5, 1.5, 1.5)));
+			cards.add(w("H").add(createCardBattery(isPlayer, 1.3, 5.0, 2.0, 2.0, 2.0)));
+			cards.add(w("V").add(createCardBattery(isPlayer, 1.6, 12.0, 4.0, 3.0, 3.0)));
+
+			return cards;
+		}
+	};
+
+	public static SupplierCardWeaponBurst sand = new SupplierCardWeaponBurst(Items.sand) {
+		private CardBatteryAbstract createCardBattery(
+			boolean isPlayer,
+			double speed,
+			double damage,
+			double ways,
+			double noizSpeedRate,
+			double noizAngle)
+		{
+			return getBulletBase(isPlayer)
+				.map(SIZE, a -> a * 0.75)
+				.map(SPEED, a -> a * 2 * speed)
+				.map(DAMAGE, a -> a / 4 * damage)
+				.map(WAYS, a -> a * 3 * ways)
+				.map(NOIZ_SPEED_RATE, a -> a * noizSpeedRate)
+				.map(NOIZ_ANGLE, a -> a * noizAngle);
+		}
+
+		@Override
+		public ArrayList<CardWeapon> createCardWeapons(Boolean isPlayer)
+		{
+			ArrayList<CardWeapon> cards = new ArrayList<CardWeapon>();
+
+			cards.add(w("L").add(createCardBattery(isPlayer, 1.0, 1.0, 1.0, 1.0, 1.0)));
+			cards.add(w("M").add(createCardBattery(isPlayer, 1.1, 2.2, 1.5, 1.5, 1.5)));
+			cards.add(w("H").add(createCardBattery(isPlayer, 1.3, 5.0, 2.0, 2.0, 2.0)));
+			cards.add(w("V").add(createCardBattery(isPlayer, 1.6, 12.0, 4.0, 3.0, 3.0)));
 
 			return cards;
 		}

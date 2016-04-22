@@ -22,6 +22,7 @@ public class EntityPlayer implements IPlayer
 	public Optional<IWeapon> weaponLeft;
 	public Optional<IWeapon> weaponRight;
 	public int damageBomb;
+	public Color colorBomb;
 
 	public int invincible = 50;
 
@@ -31,7 +32,8 @@ public class EntityPlayer implements IPlayer
 		double r,
 		Optional<IWeapon> weaponLeft,
 		Optional<IWeapon> weaponRight,
-		int damageBomb)
+		int damageBomb,
+		Color colorBomb)
 	{
 		this.x = x;
 		this.y = y;
@@ -39,6 +41,7 @@ public class EntityPlayer implements IPlayer
 		this.weaponLeft = weaponLeft;
 		this.weaponRight = weaponRight;
 		this.damageBomb = damageBomb;
+		this.colorBomb = colorBomb;
 	}
 
 	@Override
@@ -111,7 +114,7 @@ public class EntityPlayer implements IPlayer
 
 	public void doBomb(PhaseBattle phase)
 	{
-		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, damageBomb));
+		phase.addBulletPlayer(new BulletBomb(x, y, 0.5, damageBomb, colorBomb));
 	}
 
 	private int ir;

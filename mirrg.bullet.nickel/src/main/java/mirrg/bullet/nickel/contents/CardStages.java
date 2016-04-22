@@ -2,10 +2,12 @@ package mirrg.bullet.nickel.contents;
 
 import java.util.function.Supplier;
 
+import mirrg.bullet.nickel.contents.stages.StageBeach;
 import mirrg.bullet.nickel.contents.stages.StageLandOpening;
 import mirrg.bullet.nickel.contents.stages.StagePlainDirt;
 import mirrg.bullet.nickel.contents.stages.StagePlainGrass;
 import mirrg.bullet.nickel.contents.stages.StagePlainStone;
+import mirrg.bullet.nickel.contents.stages.StageQuarryCalcite;
 import mirrg.bullet.nickel.contents.stages.StageQuarryCopper;
 import mirrg.bullet.nickel.item.IItem;
 import mirrg.bullet.nickel.stage.ICardStage;
@@ -17,7 +19,11 @@ public enum CardStages implements ICardStage
 	plainStone(StagePlainStone::new, "PlainStone", "石の平原", Items.stone, 9, 0),
 	plainDirt(StagePlainDirt::new, "PlainDirt", "土の平原", Items.dirt, 9, 1),
 	plainGrass(StagePlainGrass::new, "PlainGrass", "草の平原", Items.grass, 9, 2),
-	quarryCopper(StageQuarryCopper::new, "QuarryCopper", "銅の鉱山", Items.copper, 8, 1);
+	quarryCopper(StageQuarryCopper::new, "QuarryCopper", "銅の鉱山", Items.copper, 8, 1),
+	quarryCalcite(StageQuarryCalcite::new, "QuarryCalcite", "石灰の岩場", Items.calcite, 10, 2),
+	beach(StageBeach::new, "Beach", "砂浜", Items.sand, 10, 3),
+
+	;
 
 	public Supplier<IStage> creator;
 	public String name;

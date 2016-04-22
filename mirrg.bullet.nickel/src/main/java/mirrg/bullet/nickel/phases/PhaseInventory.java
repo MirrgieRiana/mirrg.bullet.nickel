@@ -10,6 +10,7 @@ import mirrg.bullet.nickel.core.SessionNickel;
 import mirrg.bullet.nickel.gui.Button;
 import mirrg.bullet.nickel.gui.Label;
 import mirrg.bullet.nickel.item.IStack;
+import mirrg.bullet.nickel.item.StackItem;
 import mirrg.bullet.nickel.item.StackWeapon;
 
 public class PhaseInventory extends PhaseListAbstract
@@ -69,6 +70,17 @@ public class PhaseInventory extends PhaseListAbstract
 						fireReflesh();
 					}));
 				components.add(e);
+			}
+
+		} else if (stack instanceof StackItem) {
+
+			{
+				Rectangle2D.Double area2 = new Rectangle2D.Double(area.x + 5, area.y + 5 + (25 + 5) * row, 55, 25);
+				components.add(new Button(game, area2)
+					.setColor(((StackItem) stack).item.getCategory().getColor())
+					.setEnable(false));
+				components.add(new Label(new Point2D.Double(area2.getCenterX(), area2.getCenterY()),
+					((StackItem) stack).item.getCategory().getNameLocalized(), new Font(Font.SANS_SERIF, Font.PLAIN, 24)));
 			}
 
 		}

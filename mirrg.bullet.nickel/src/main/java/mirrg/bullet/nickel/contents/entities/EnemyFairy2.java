@@ -20,7 +20,7 @@ public class EnemyFairy2 extends EnemyBase
 
 	public EnemyFairy2(double x, double y, double r, int hp, double speed, int wait)
 	{
-		super(x, y, 0, speed, r, hp, 10);
+		super(x, y, 0, speed, r, hp, 10, new Color(255, 0, 0));
 		firing = false;
 		isInvincible = true;
 
@@ -64,7 +64,7 @@ public class EnemyFairy2 extends EnemyBase
 	{
 
 		{
-			graphics.setColor(new Color(255, 0, 0));
+			graphics.setColor(color);
 			Stroke stroke = graphics.getStroke();
 			graphics.setStroke(new BasicStroke(0.001f));
 

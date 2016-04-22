@@ -1,14 +1,12 @@
 package mirrg.bullet.nickel.contents;
 
-import java.util.function.Supplier;
+import java.util.Hashtable;
 import java.util.stream.Stream;
 
+import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponAbstract;
 import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponBullets;
-import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponBurst;
-import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponChunk;
-import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponEmitter;
-import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponSpark;
-import mirrg.bullet.nickel.contents.weapons.bullets.SupplierCardWeaponSpikes;
+import mirrg.bullet.nickel.item.Category;
+import mirrg.bullet.nickel.item.IItem;
 import mirrg.bullet.nickel.item.Recipe;
 import mirrg.bullet.nickel.item.StackItem;
 import mirrg.bullet.nickel.item.StackWeapon;
@@ -28,134 +26,89 @@ public class Recipes
 			.addOut(() -> new StackItem(Items.fuel, 1)),
 	};
 
-	private static Recipe addCasingBullets(Recipe recipe, Supplier<StackWeapon> out)
-	{
-		StackWeapon stackWeapon = out.get();
+	private static Hashtable<Category, IItem[]> tableKeyItem = new Hashtable<>();
 
-		switch (stackWeapon.item.getTier()) {
-			case 0:
-				recipe.addIn(new StackItem(Items.stone, 1), false);
-				break;
-			case 1:
-				recipe.addIn(new StackItem(Items.stone, 3), false);
-				break;
-			case 2:
-				recipe.addIn(new StackItem(Items.stone, 5), false);
-				break;
-			case 3:
-				recipe.addIn(new StackItem(Items.copper, 1), false); // key point
-				recipe.addIn(new StackItem(Items.stone, 10), false);
-				break;
-			case 4:
-				recipe.addIn(new StackItem(Items.copper, 3), false);
-				recipe.addIn(new StackItem(Items.stone, 20), false);
-				break;
-			case 5:
-				recipe.addIn(new StackItem(Items.copper, 5), false);
-				recipe.addIn(new StackItem(Items.stone, 15), false);
-				break;
-			case 6:
-				recipe.addIn(new StackItem(Items.iron, 1), false); // key point
-				recipe.addIn(new StackItem(Items.copper, 10), false);
-				recipe.addIn(new StackItem(Items.stone, 10), false);
-				break;
-			case 7:
-				recipe.addIn(new StackItem(Items.iron, 3), false);
-				recipe.addIn(new StackItem(Items.copper, 20), false);
-				recipe.addIn(new StackItem(Items.stone, 5), false);
-				break;
-			case 8:
-				recipe.addIn(new StackItem(Items.iron, 5), false);
-				recipe.addIn(new StackItem(Items.copper, 15), false);
-				break;
-			case 9:
-				recipe.addIn(new StackItem(Items.bronze, 1), false); // key point
-				recipe.addIn(new StackItem(Items.iron, 10), false);
-				recipe.addIn(new StackItem(Items.copper, 10), false);
-				break;
-			case 10:
-				recipe.addIn(new StackItem(Items.bronze, 3), false);
-				recipe.addIn(new StackItem(Items.iron, 20), false);
-				recipe.addIn(new StackItem(Items.copper, 5), false);
-				break;
-			case 11:
-				recipe.addIn(new StackItem(Items.bronze, 5), false);
-				recipe.addIn(new StackItem(Items.iron, 15), false);
-				break;
-			case 12:
-				recipe.addIn(new StackItem(Items.nickel, 1), false); // key point
-				recipe.addIn(new StackItem(Items.bronze, 10), false);
-				recipe.addIn(new StackItem(Items.iron, 10), false);
-				break;
-			case 13:
-				recipe.addIn(new StackItem(Items.nickel, 3), false);
-				recipe.addIn(new StackItem(Items.bronze, 20), false);
-				recipe.addIn(new StackItem(Items.iron, 5), false);
-				break;
-			default:
-				recipe.addIn(new StackItem(Items.nickel, 5), false);
-				recipe.addIn(new StackItem(Items.bronze, 15), false);
-				break;
+	static {
+		tableKeyItem.put(Category.fire, new IItem[] {
+			Items.copper, // Tier2~
+			Items.iron, // Tier5~
+			Items.bronze, // Tier8~
+		});
+		tableKeyItem.put(Category.aqua, new IItem[] {
+			Items.calcite, // Tier2~
+		});
+		tableKeyItem.put(Category.air, new IItem[] {
+			Items.grass, // Tier2~
+			Items.grass, // Tier5~
+			Items.grass, // Tier8~
+		});
+		tableKeyItem.put(Category.earth, new IItem[] {
+			Items.dirt, // Tier2~
+			Items.stone, // Tier5~
+			Items.sand, // Tier8~
+			Items.brick, // Tier11~
+		});
+	}
+
+	private static Hashtable<String, Integer> tableCostAddition = new Hashtable<>();
+
+	static {
+		tableCostAddition.put("P", 1);
+		tableCostAddition.put("L", 5);
+		tableCostAddition.put("M", 10);
+		tableCostAddition.put("H", 20);
+		tableCostAddition.put("V", 40);
+		tableCostAddition.put("U", 60);
+		tableCostAddition.put("S", 100);
+		tableCostAddition.put("X", 200);
+	}
+
+	private static int[] costs = {
+		1, 5, 19, 19, 15, 1,
+	};
+
+	private static Recipe createRecipeWeapon(int costBase, SupplierCardWeaponAbstract supplierCardWeapon, String nameGrade)
+	{
+		Category category = supplierCardWeapon.getItem().getCategory();
+
+		int tier = supplierCardWeapon.get(nameGrade, true).getTier();
+		IItem[] items = tableKeyItem.get(category);
+
+		Recipe recipe = new Recipe();
+
+		recipe.addIn(new StackItem(supplierCardWeapon.getItem(), tableCostAddition.get(nameGrade) + costBase), false);
+		{
+			int index = (tier + 4) / 3 - 2;
+			if (items.length > index) {
+				if (index >= 0) {
+					recipe.addIn(new StackItem(items[index], costs[(tier + 1) % 3]), false);
+				}
+			}
+		}
+		{
+			int index = (tier + 1) / 3 - 2;
+			if (items.length > index) {
+				if (index >= 0) {
+					recipe.addIn(new StackItem(items[index], costs[(tier + 1) % 3 + 3]), false);
+				}
+			}
 		}
 
-		recipe.addOut(out);
+		recipe.addOut(() -> new StackWeapon(supplierCardWeapon.get(nameGrade, true)));
 		return recipe;
 	}
 
-	public final static Recipe[] recipesMake = Stream.of(new Recipe[] {
-
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.calcite, 1), true),
-			() -> new StackWeapon(SupplierCardWeaponBullets.calcite.get("P", true))),
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.nickel, 1), true),
-			() -> new StackWeapon(SupplierCardWeaponBullets.nickel.get("P", true))),
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.stone, 5), true),
-			() -> new StackWeapon(SupplierCardWeaponBullets.stone.get("L", true))),
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.calcite, 5), true),
-			() -> new StackWeapon(SupplierCardWeaponBullets.calcite.get("L", true))),
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.nickel, 5), true),
-			() -> new StackWeapon(SupplierCardWeaponBullets.nickel.get("L", true))),
-
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.dirt, 8), true),
-			() -> new StackWeapon(SupplierCardWeaponBurst.dirt.get("L", true))),
-
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.copper, 12), true),
-			() -> new StackWeapon(SupplierCardWeaponChunk.copper.get("L", true))),
-
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.grass, 20), true),
-			() -> new StackWeapon(SupplierCardWeaponSpikes.grass.get("L", true))),
-
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.dirt, 30), true),
-			() -> new StackWeapon(SupplierCardWeaponSpark.dirt.get("L", true))),
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.grass, 30), true),
-			() -> new StackWeapon(SupplierCardWeaponSpark.grass.get("L", true))),
-
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.stone, 35), true),
-			() -> new StackWeapon(SupplierCardWeaponEmitter.stone.get("L", true))),
-		addCasingBullets(new Recipe()
-			.addIn(new StackItem(Items.copper, 35), true),
-			() -> new StackWeapon(SupplierCardWeaponEmitter.copper.get("L", true))),
-
-	})
+	public final static Recipe[] recipesMake = CardWeapons.getSuppliers().stream()
+		.flatMap(supplier -> supplier.getCardWeapons(true).entrySet().stream()
+			.map(entry -> createRecipeWeapon(supplier.getCost(), supplier, entry.getKey())))
 		.sorted((a, b) -> {
 			double c = ((StackWeapon) a.out.get(0).get()).item.getTier()
-				- ((StackWeapon) b.out.get(0).get()).item.getTier();
+				- ((StackWeapon) b.out.get(0).get()).item
+					.getTier();
 			if (c != 0) return (int) Math.signum(c);
-			c = ((StackWeapon) a.out.get(0).get()).item.getDamagePerSecond(true)
-				- ((StackWeapon) b.out.get(0).get()).item.getDamagePerSecond(true);
+			c = ((StackWeapon) a.out.get(0).get()).item.getDamagePerSecond(true) - ((StackWeapon) b.out.get(0).get()).item.getDamagePerSecond(true);
 			return (int) Math.signum(c);
-		})
-		.toArray(Recipe[]::new);
+		}).toArray(Recipe[]::new);
 
 	public final static Recipe[] recipesUpgrade = {
 
@@ -170,6 +123,9 @@ public class Recipes
 			.addIn(new StackItem(Items.stone, 20), true)
 			.addIn(new StackItem(Items.clay, 5), true)
 			.addOut(() -> new StackItem(Items.furnace, 1)),
+		new Recipe()
+			.addIn(new StackItem(Items.oil, 1), true)
+			.addOut(() -> new StackItem(Items.fuel, 5)),
 	};
 
 	public final static Recipe[] recipesRefine = {

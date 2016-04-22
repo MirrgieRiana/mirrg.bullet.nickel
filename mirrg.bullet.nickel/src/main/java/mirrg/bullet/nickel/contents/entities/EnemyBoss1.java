@@ -16,7 +16,7 @@ public class EnemyBoss1 extends EnemyBase
 
 	public EnemyBoss1(double x, double y, double r, int hp, int dropCount)
 	{
-		super(x, y, 0, 0, r, hp, dropCount);
+		super(x, y, 0, 0, r, hp, dropCount, new Color(255, 192, 0));
 		isBoss = true;
 		firing = false;
 	}
@@ -52,7 +52,7 @@ public class EnemyBoss1 extends EnemyBase
 	{
 
 		{
-			graphics.setColor(new Color(255, 192, 0));
+			graphics.setColor(color);
 			Stroke stroke = graphics.getStroke();
 			graphics.setStroke(new BasicStroke(0.001f));
 
@@ -71,7 +71,7 @@ public class EnemyBoss1 extends EnemyBase
 	@Override
 	public boolean move(PhaseBattle phase)
 	{
-	
+
 	// 雑魚召喚
 	if (age % 50 == 0) {
 		EnemyFairy enemy = new EnemyFairy(x, y, 0, 0);
@@ -82,21 +82,21 @@ public class EnemyBoss1 extends EnemyBase
 		enemy.yy = speed * Math.sin(theta);
 		game.addEnemy(enemy);
 	}
-	
+
 	// 自機狙い
 	if (age % 20 == 0) {
 		for (int i = 0; i < 5; i++) {
-	
+
 			BulletStraight bullet = new BulletStraight(Math.random(), 0.25 * Math.random(), 0, 0, 0.015, Color.yellow);
 			double theta = Math.atan2(game.player.getY() - bullet.y, game.player.getX() - bullet.x);
 			double speed = Math.sqrt(pow2(game.player.getY() - bullet.y) + pow2(game.player.getX() - bullet.x)) / 100;
 			bullet.xx = speed * Math.cos(theta);
 			bullet.yy = speed * Math.sin(theta);
-	
+
 			game.addBulletEnemy(bullet);
 		}
 	}
-	
+
 	return super.move(phase);
 	}
 	private double pow2(double value)

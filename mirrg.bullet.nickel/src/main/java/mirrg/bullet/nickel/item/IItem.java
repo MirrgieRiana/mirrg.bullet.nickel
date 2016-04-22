@@ -11,4 +11,6 @@ public interface IItem
 
 	public Color getColor();
 
+	public Category getCategory();
+
 }

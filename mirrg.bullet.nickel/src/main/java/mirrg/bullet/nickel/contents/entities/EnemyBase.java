@@ -27,6 +27,7 @@ public class EnemyBase implements ILiving
 	public double yy;
 	public double r;
 	public int dropCount;
+	public Color color;
 
 	public int hp;
 	public int hpMax;
@@ -38,7 +39,7 @@ public class EnemyBase implements ILiving
 	public ArrayList<IWeapon> weapons = new ArrayList<>();
 	public ArrayList<Supplier<IStack>> supplierStacks = new ArrayList<>();
 
-	public EnemyBase(double x, double y, double xx, double yy, double r, int hp, int dropCount)
+	public EnemyBase(double x, double y, double xx, double yy, double r, int hp, int dropCount, Color color)
 	{
 		this.x = x;
 		this.y = y;
@@ -48,6 +49,7 @@ public class EnemyBase implements ILiving
 		this.hp = hp;
 		this.hpMax = hp;
 		this.dropCount = dropCount;
+		this.color = color;
 	}
 
 	public EnemyBase addWeapon(IWeapon weapons)
@@ -112,7 +114,7 @@ public class EnemyBase implements ILiving
 	public void onDie(PhaseBattle phase)
 	{
 		if (hp <= 0) {
-			if (isBoss) phase.addBulletPlayer(new BulletBomb(x, y, 1, 1));
+			if (isBoss) phase.addBulletPlayer(new BulletBomb(x, y, 1, 1, color));
 
 			int dropped = 0;
 

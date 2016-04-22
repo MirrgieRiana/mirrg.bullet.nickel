@@ -1,6 +1,7 @@
 package mirrg.bullet.nickel.item;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class StackItem extends StackAbstract<IItem>
 {
@@ -32,6 +33,13 @@ public class StackItem extends StackAbstract<IItem>
 	public IStack copy(int amount)
 	{
 		return new StackItem(item, amount);
+	}
+
+	@Override
+	public void getMessages(ArrayList<String> messages)
+	{
+		super.getMessages(messages);
+		messages.add("カテゴリ：" + item.getCategory().getNameLocalized());
 	}
 
 }

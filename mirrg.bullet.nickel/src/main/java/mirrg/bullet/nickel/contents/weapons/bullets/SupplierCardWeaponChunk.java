@@ -14,7 +14,7 @@ public abstract class SupplierCardWeaponChunk extends SupplierCardWeaponAbstract
 
 	public SupplierCardWeaponChunk(IItem item)
 	{
-		super(item, "チャンク", "chunk");
+		super(item, "チャンク", "chunk", 5);
 	}
 
 	protected CardBatteryAbstract getBulletBase(boolean isPlayer)
