@@ -33,20 +33,51 @@ public class Recipes
 			Items.copper, // Tier2~
 			Items.iron, // Tier5~
 			Items.bronze, // Tier8~
+			Items.steel, // Tier11~
+			Items.chrome, // Tier14~
+			Items.titanium, // Tier17~
+			Items.tungstensteel, // Tier20~
+			Items.iridium, // Tier23~
+			Items.osmium, // Tier26~
 		});
 		tableKeyItem.put(Category.aqua, new IItem[] {
 			Items.calcite, // Tier2~
+			Items.fluorite, // Tier5~
+			/*
+			Items.apatite, // Tier8~
+			Items.orthoclase, // Tier11~
+			Items.quartz, // Tier14~
+			Items.topaz, // Tier17~
+			Items.emerald, // Tier20~
+			Items.ruby, // Tier23~
+			Items.diamond, // Tier26~
+			*/
 		});
 		tableKeyItem.put(Category.air, new IItem[] {
 			Items.grass, // Tier2~
-			Items.grass, // Tier5~
-			Items.grass, // Tier8~
+			Items.leaf, // Tier5~
+			/*
+			Items.bone, // Tier8~
+			Items.branch, // Tier11~
+			Items.wood, // Tier14~
+			Items.log, // Tier17~
+			Items.hardbone, // Tier20~
+			Items.tree, // Tier23~
+			Items.hardwood, // Tier26~
+			*/
 		});
 		tableKeyItem.put(Category.earth, new IItem[] {
 			Items.dirt, // Tier2~
 			Items.stone, // Tier5~
+			/*
 			Items.sand, // Tier8~
-			Items.brick, // Tier11~
+			Items.sandstone, // Tier11~
+			Items.brick, // Tier14~
+			Items.rock, // Tier17~
+			Items.hardstone, // Tier20~
+			Items.acidsand, // Tier23~
+			Items.hardwood, // Tier26~
+			*/
 		});
 	}
 
@@ -79,19 +110,13 @@ public class Recipes
 		recipe.addIn(new StackItem(supplierCardWeapon.getItem(), tableCostAddition.get(nameGrade) + costBase), false);
 		{
 			int index = (tier + 4) / 3 - 2;
-			if (items.length > index) {
-				if (index >= 0) {
-					recipe.addIn(new StackItem(items[index], costs[(tier + 1) % 3]), false);
-				}
-			}
+			if (index >= items.length) index = items.length - 1;
+			if (index >= 0) recipe.addIn(new StackItem(items[index], costs[(tier + 1) % 3]), false);
 		}
 		{
 			int index = (tier + 1) / 3 - 2;
-			if (items.length > index) {
-				if (index >= 0) {
-					recipe.addIn(new StackItem(items[index], costs[(tier + 1) % 3 + 3]), false);
-				}
-			}
+			if (index >= items.length) index = items.length - 1;
+			if (index >= 0) recipe.addIn(new StackItem(items[index], costs[(tier + 1) % 3 + 3]), false);
 		}
 
 		recipe.addOut(() -> new StackWeapon(supplierCardWeapon.get(nameGrade, true)));

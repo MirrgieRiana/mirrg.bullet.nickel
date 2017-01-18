@@ -13,7 +13,8 @@ public enum Items implements IItem
 	brick("ブリック", Color.decode("#DD5B3E"), earth),
 	glass("ガラス", Color.decode("#D8D8D8"), aqua),
 
-	calcite("カルサイト", Color.decode("#DDDDCC"), aqua),
+	calcite("カルサイト", Color.decode("#DDDDA8"), aqua),
+	fluorite("フルオライト", Color.decode("#28D389"), aqua),
 
 	water("ウォーター", Color.decode("#4C71E0"), aqua),
 	lava("ラヴァ", Color.decode("#BF3609"), fire),
@@ -23,15 +24,22 @@ public enum Items implements IItem
 	clay("クレイ", Color.decode("#CCC0AB"), earth),
 	sand("サンド", Color.decode("#EFCF94"), earth),
 
-	iron("アイアン", Color.decode("#9E9999"), fire),
+	iron("アイアン", Color.decode("#9B8585"), fire),
 	bronze("ブロンズ", Color.decode("#EFA27F"), fire),
-	nickel("ニッケル", Color.decode("#A2A5C4"), fire),
-	steal("スチール", Color.decode("#686565"), fire),
+	nickel("ニッケル", Color.decode("#8F94C1"), fire),
+	steel("スチール", Color.decode("#4F4D4D"), fire),
 
-	tin("ティン", Color.decode("#C7C6CE"), fire),
+	chrome("クロム", Color.decode("#FFA8C9"), fire),
+	titanium("チタン", Color.decode("#CAA5FF"), fire),
+	tungsten("タングステン", Color.decode("#080F26"), fire),
+	tungstensteel("タングステンスチール", Color.decode("#1F1944"), fire),
+	iridium("イリジウム", Color.decode("#CBEAC9"), fire),
+	osmium("オスミウム", Color.decode("#0003E8"), fire),
+
+	tin("ティン", Color.decode("#A6A5AA"), fire),
 
 	copper("カッパー", Color.decode("#FF6A2B"), fire),
-	silver("シルバー", Color.decode("#DEE7E8"), fire),
+	silver("シルバー", Color.decode("#B0E8CE"), fire),
 	gold("ゴールド", Color.decode("#E09C1D"), fire),
 
 	emerald("エメラルド", Color.decode("#00D659"), aqua),
